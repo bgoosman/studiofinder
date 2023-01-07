@@ -1,23 +1,27 @@
 {
   "folders": [
     {
+      "name": "rehearsalfun",
+      "path": "."
+    },
+    {
       "name": "artsonsite",
-      "path": "artsonsite"
+      "path": "packages/artsonsite"
     },
     {
       "name": "view",
-      "path": "view"
+      "path": "packages/view"
     },
     {
       "name": "finder",
-      "path": "finder"
+      "path": "packages/finder"
     },
     {
       "name": "gibney",
-      "path": "gibney"
+      "path": "packages/gibney"
     }
   ],
   "settings": {
-    "jest.disabledWorkspaceFolders": ["rehearsalfun", "artsonsite", "gibney"]
+    "jest.disabledWorkspaceFolders": ["artsonsite", "gibney", "rehearsalfun"]
   }
 }
