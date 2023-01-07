@@ -11,7 +11,6 @@
   "dependencies": {
     "@types/node": "^18.11.18",
     "cheerio": "^1.0.0-rc.12",
-    "fp-ts": "^2.13.1",
     "lodash": "^4.17.21",
     "luxon": "^3.1.1",
     "moment": "^2.29.4",

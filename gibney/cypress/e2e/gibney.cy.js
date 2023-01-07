@@ -6,8 +6,8 @@ const GIBNEY_890 = 'Gibney (890 Broadway)';
 const AVAILABLE = "Available";
 const LOGIN = {
   loginUrl: "https://gibney.force.com/s/login/?ec=302&startURL=%2Fs%2F",
-  username: "bgoosman@gmail.com",
-  password: "L*WD?3@sNN7JB2",
+  username: Cypress.env("GIBNEY_USERNAME"),
+  password: Cypress.env("GIBNEY_PASSWORD"),
 };
 const SLOTS_ROOT = `dist`;
 
