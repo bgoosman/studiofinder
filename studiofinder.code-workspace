@@ -1,0 +1,27 @@
+{
+  "folders": [
+    {
+      "name": "studiofinder",
+      "path": "."
+    },
+    {
+      "name": "artsonsite",
+      "path": "packages/artsonsite"
+    },
+    {
+      "name": "view",
+      "path": "packages/view"
+    },
+    {
+      "name": "finder",
+      "path": "packages/finder"
+    },
+    {
+      "name": "gibney",
+      "path": "packages/gibney"
+    }
+  ],
+  "settings": {
+    "jest.disabledWorkspaceFolders": ["artsonsite", "gibney", "studiofinder"]
+  }
+}
