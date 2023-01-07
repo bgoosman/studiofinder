@@ -1,0 +1,9 @@
+node_modules
+.DS_Store
+*.mp4
+/cypress/screenshots
+yarn-error.log
+/.yarn
+/slots
+dist
+dist-resolver

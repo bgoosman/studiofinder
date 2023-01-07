@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "lib": ["es2021", "dom"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": "dist-resolver",
+    "resolveJsonModule": true,
+    "strict": true,
+    "target": "ESNext",
+    "types": ["node", "jest"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts"]
+}

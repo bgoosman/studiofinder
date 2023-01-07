@@ -1,0 +1,10 @@
+import * as R2 from "fp-ts-std/Record";
+import * as A from "fp-ts/Array";
+import * as NEA from "fp-ts/NonEmptyArray";
+import * as O from "fp-ts/Option";
+import * as R1 from "fp-ts/Record";
+import * as S from "fp-ts/string";
+export { flow, pipe } from "fp-ts/function";
+export type { Ord } from "fp-ts/Ord";
+export { A, NEA, O, S };
+export const R = { ...R1, ...R2 };

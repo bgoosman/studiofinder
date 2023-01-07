@@ -1,0 +1,19 @@
+{
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "isolatedModules": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "noUncheckedIndexedAccess": true,
+    "paths": {
+      "@finder/*": ["../finder/src/types/*"]
+    },
+    "resolveJsonModule": true,
+    "strict": true,
+    "target": "ESNext"
+  }
+}
