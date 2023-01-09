@@ -8,6 +8,12 @@
   animation-iteration-count: 1;
 }
 
+html,
+body,
+#app {
+  min-height: 100vh;
+}
+
 @keyframes appear {
   0% {
     opacity: 0;

@@ -7,19 +7,14 @@ import {
 import { DateTime } from "luxon";
 import { useEffect } from "react";
 import { themeChange } from "theme-change";
+
 import { Logo } from "./components/Logo";
 import { PlaceFilterTree } from "./components/PlaceFilterTree";
 import { SlotGroup } from "./components/SlotGroup";
+import { Stats } from "./components/Stats";
 import { ThemePicker } from "./components/ThemePicker";
 import { WeekdayFilter } from "./components/WeekdayFilter";
-import { setIsInitializing, useInitializingEntity } from "./state/isInitializing";
-import { useCreatedAt } from "./state/places";
-import { slotGroupsByDate } from "./state/slotsGroupedByDate";
-import { useTitleEntity } from "./state/title";
 import { WhatIsThisPopover } from "./components/WhatIsThisPopover";
-import InfiniteScroll from "react-infinite-scroll-component";
-
-import "./App.css";
 import {
   getNextPage,
   hasNextPage,
@@ -27,7 +22,12 @@ import {
   page,
   totalPageCount,
 } from "./state/infiniteSlotGroups";
-import { Stats } from "./components/Stats";
+import { setIsInitializing, useInitializingEntity } from "./state/isInitializing";
+import { useCreatedAt } from "./state/places";
+import { slotGroupsByDate } from "./state/slotsGroupedByDate";
+import { useTitleEntity } from "./state/title";
+
+import "./App.css";
 
 export default function App() {
   const isInitializing = useInitializingEntity();
@@ -142,7 +142,7 @@ export default function App() {
                       })}
                     />
                   ))}
-                <p className="p-4 pb-0">
+                <p className="p-4">
                   {_hasNextPage
                     ? "There are more slots. Keep scrolling!"
                     : "That's all for now! Try different filters."}
