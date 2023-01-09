@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "slots": "mkdir -p slots/ && cp ../finder/dist/universe.json slots/universe.json",
-    "build": "yarn slots && yarn run webpack --config webpack.prod.js",
+    "build": "yarn run webpack --config webpack.prod.js",
     "start": "yarn run webpack serve --open --config webpack.dev.js",
     "deploy": "yarn surge:deploy",
     "surge:tls": "surge ssl --pem ./surge.pem --domain https://rehearsal.fun",
