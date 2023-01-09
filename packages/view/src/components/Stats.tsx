@@ -1,10 +1,13 @@
 import { CalendarDaysIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import { DateTime } from "luxon";
+
 import { placesById } from "../state/places";
 import { useSlotFilter } from "../state/slotFilters";
+import { slotsEntity } from "../state/slots";
 import { slotGroupsByDate } from "../state/slotsGroupedByDate";
 
 export function Stats() {
+  const slots = slotsEntity.use();
   const _placesById = placesById.use();
   const _slotGroupsByDate = slotGroupsByDate.use();
   const totalFilteredSlots = _slotGroupsByDate.reduce(
@@ -34,7 +37,15 @@ export function Stats() {
         </div>
         <div className="stat-title">Filtered Slots</div>
         <div className="stat-value">{totalFilteredSlots}</div>
-        <div className="stat-desc">{totalSlotsDateRange}</div>
+        <div className="stat-desc">
+          out of {slots.length}
+          {totalSlotsDateRange && (
+            <>
+              <br />
+              {totalSlotsDateRange}
+            </>
+          )}
+        </div>
       </div>
 
       <div className="stat p-3 md:p-6">
