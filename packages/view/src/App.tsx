@@ -147,9 +147,6 @@ export default function App() {
                     ? "There are more slots. Keep scrolling!"
                     : "That's all for now! Try different filters."}
                 </p>
-                <p className="p-4">
-                  {_page + 1} / {_totalPageCount} pages. {_slotGroupsByDate.length} groups
-                </p>
               </>
             )}
           </section>
