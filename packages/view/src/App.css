@@ -10,7 +10,8 @@
 
 html,
 body,
-#app {
+#app,
+#app-inner {
   min-height: 100vh;
 }
 
