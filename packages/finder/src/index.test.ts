@@ -47,11 +47,23 @@ it("is valid", () => {
       ).toBe(false);
 
       place.slots.forEach((slot, i) => {
+        const slotStart = new Date(slot.start);
+        const yesterday = DateTime.now().minus({ days: 1 }).toJSDate();
+        expect(slotStart > yesterday).toBe(true);
         if (i > 0) {
-          console.log(slot.start, place.slots[i - 1].start);
-          expect(new Date(slot.start) >= new Date(place.slots[i - 1].start)).toBe(true);
+          const prevSlot = place.slots[i - 1];
+          const prevSlotEnd = new Date(prevSlot.end);
+          expect(slotStart >= prevSlotEnd).toBe(true);
         }
       });
+
+      // all slots should have a unique start time
+      const uniqStartTimes = new Set(place.slots.map((slot) => slot.start));
+      expect(uniqStartTimes.size).toBe(place.slots.length);
+
+      // all slots should have a unique end time
+      const uniqEndTimes = new Set(place.slots.map((slot) => slot.end));
+      expect(uniqEndTimes.size).toBe(place.slots.length);
     }
 
     if (place.id != "Universe>Manhattan>Gibney (890 Broadway)>Studio 1")

@@ -8,7 +8,7 @@ import { entity } from "simpler-state";
 import { getUniverse, traversePlace } from "./places";
 
 export type ResolvedSlots = NEA.NonEmptyArray<ResolvedSlot>;
-const slotsEntity = entity<ResolvedSlots>(
+export const slotsEntity = entity<ResolvedSlots>(
   pipe(
     getUniverse(),
     traversePlace((place) => {
@@ -35,5 +35,3 @@ const slotsEntity = entity<ResolvedSlots>(
     }
   )
 );
-
-export const getSlots = slotsEntity.get;

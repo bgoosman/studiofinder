@@ -6,6 +6,7 @@ import { DateTime } from "luxon";
 import { DateRange, dateRange } from "../datetime/datetime-fns";
 import { safeFetch, safeText, xmlToJson } from "../fp-ts/fp-ts-functions";
 import { invertSlots } from "../slots/invertSlots";
+import { mergeOverlappingSlots } from "../slots/mergeOverlappingSlots";
 import { Conditional } from "../types/Conditional";
 import { Link } from "../types/Link";
 import { numberRange } from "../types/NumberRange";
@@ -138,7 +139,16 @@ const optionsToSlots = flow(
   safeFetch,
   TE.chain(safeText),
   TE.chain(xmlToJson),
-  TE.map(jsonToSlots),
+  TE.map(jsonToSlots)
+);
+
+const getSlots = flow(
+  RA.map(optionsToSlots),
+  TE.sequenceArray,
+  TE.map(RA.flatten),
+  TE.map(RA.sort(slotsOrderedByDate)),
+  TE.map((ra: ReadonlyArray<Slot>) => ra as Array<Slot>),
+  TE.map(mergeOverlappingSlots),
   TE.map(
     invertSlots({
       range,
@@ -147,15 +157,12 @@ const optionsToSlots = flow(
   )
 );
 
-const getSlots = flow(
-  RA.map(optionsToSlots),
-  TE.sequenceArray,
-  TE.map(RA.flatten),
-  TE.map(RA.sort(slotsOrderedByDate)),
-  TE.map((ra: ReadonlyArray<Slot>) => ra as Array<Slot>)
-);
-
-getSlots(schema["Ninth St"].slots)(); //?
+// getSlots(schema["Courtyard"].slots)().then((slots) =>
+//   slots.right.map((s) => ({
+//     start: DateTime.fromISO(s.start).toLocaleString(DateTime.DATETIME_FULL),
+//     end: DateTime.fromISO(s.end).toLocaleString(DateTime.DATETIME_FULL),
+//   }))
+// ); //?
 
 export const cc122 = withPlaces(
   "122 Community Center",

@@ -22,6 +22,6 @@
     }
   ],
   "settings": {
-    "jest.disabledWorkspaceFolders": ["artsonsite", "gibney", "studiofinder"]
+    "jest.disabledWorkspaceFolders": ["artsonsite", "gibney"]
   }
 }

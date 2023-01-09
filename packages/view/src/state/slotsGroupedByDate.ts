@@ -11,5 +11,6 @@ import { ResolvedSlots } from "./slots";
 export type ResolvedSlotsGroupedByDate = Record<string, ResolvedSlots>;
 export const resolvedSlotsGroupedByDateEntity = entity<ResolvedSlotsGroupedByDate>({});
 
-const slotGroupsByDate = derived(resolvedSlotsGroupedByDateEntity, (x) => Object.entries(x));
-export const useSlotGroupsByDate = slotGroupsByDate.use;
+export const slotGroupsByDate = derived(resolvedSlotsGroupedByDateEntity, (x) =>
+  Object.entries(x).sort(([a], [b]) => (a > b ? 1 : a < b ? -1 : 0))
+);

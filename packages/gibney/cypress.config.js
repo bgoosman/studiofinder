@@ -6,7 +6,6 @@ module.exports = {
     setupNodeEvents(on, config) {
       on('task', {
         setValue: ({ key, value }) => {
-          console.log('setValue', key, value);
           data[key] = value;
           return null;
         },

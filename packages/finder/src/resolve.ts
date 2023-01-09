@@ -1,12 +1,13 @@
 import * as A from "fp-ts/Array";
 import * as E from "fp-ts/Either";
+import { pipe } from "fp-ts/lib/function";
 import * as T from "fp-ts/Task";
 import { cloneDeep, omit } from "lodash";
 import { map } from "rubico";
 import { resolveEmailStrategy } from "./resolvers/emailStrategy";
 import { Link } from "./types/Link";
 import { Place, ResolvedPlace, ResolvedPlaceMeta } from "./types/Place";
-import { ResolvedSlot, Slot, slotsOrderedByDate } from "./types/Slot";
+import { ResolvedSlot, resolvedSlotsOrderedByDate, Slot } from "./types/Slot";
 
 // https://levelup.gitconnected.com/how-to-run-sequential-tasks-in-fp-ts-8aa3be991f33
 const resolveLinks = async (links: T.Task<Link>[]) =>
@@ -57,8 +58,10 @@ export const resolvePlace = async (
       id,
       name,
       path,
-      slots: A.sort(slotsOrderedByDate)(
-        await map(resolveSlot(id, place))(slotsEither.right)
+      slots: await pipe(
+        await map(resolveSlot(id, place))(slotsEither.right),
+        A.filter((slot: ResolvedSlot) => new Date(slot.start) > new Date()),
+        A.sort(resolvedSlotsOrderedByDate)
       ),
       meta: await resolvePlaceMeta(place),
       places: await map((place: Place) => resolvePlace(place, [...path]))(places),

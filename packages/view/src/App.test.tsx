@@ -8,7 +8,7 @@ const enablePlace = (id: string) => {
   setSlotFilter("place", setPlaceFilter(true)(id));
 };
 
-it("works", async () => {
+it("App renders", async () => {
   enablePlace("Universe>Brooklyn>Triskelion Arts>Lillian");
 
   render(<App />);

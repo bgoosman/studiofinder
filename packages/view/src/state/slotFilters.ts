@@ -6,7 +6,7 @@ import { hourFilter, HourRange } from "./filters/hourFilter";
 import { placesFilter, PlacesFilter } from "./filters/placeFilter";
 import { Weekday, WeekdayFilters, weekdaysFilter } from "./filters/weekdayFilter";
 import { reaction } from "./simpler-state/reaction";
-import { getSlots, ResolvedSlots } from "./slots";
+import { ResolvedSlots, slotsEntity } from "./slots";
 import {
   ResolvedSlotsGroupedByDate,
   resolvedSlotsGroupedByDateEntity,
@@ -61,9 +61,9 @@ const computeResolvedSlotsGroupedByDateWithFilters = (
   flow(
     A.filter(filterSlotsWithOptions(options)),
     A.match(
-      () => ({}),
       // sort and groupBy require NonEmptyArray, so by using A.match, we skip calling them altogether if the array is empty.
       // I used to sort here with NEA.sort(ordSlotStartDate), but it's not necessary, since the slots are already sorted by the API.
+      () => ({}),
       NEA.groupBy(getSlotStartDateString)
     )
   );
@@ -78,7 +78,7 @@ const slotFilters = entity<SlotFilters>(
   [
     reaction((filters: SlotFilters) => {
       resolvedSlotsGroupedByDateEntity.set(
-        computeResolvedSlotsGroupedByDateWithFilters(filters)(getSlots())
+        computeResolvedSlotsGroupedByDateWithFilters(filters)(slotsEntity.get())
       );
     }),
   ]

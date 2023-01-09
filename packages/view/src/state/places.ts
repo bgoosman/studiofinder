@@ -26,7 +26,7 @@ export const getUniverse = universe.get;
 export const useCreatedAt = () => universe.use((place) => place.createdAt);
 
 export type ResolvedPlaceById = Record<ResolvedPlace["id"], ResolvedPlace>;
-const placesById = entity<ResolvedPlaceById>(
+export const placesById = entity<ResolvedPlaceById>(
   traversePlace((place) => place)(getUniverse())
 );
 

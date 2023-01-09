@@ -14,16 +14,30 @@ import { ThemePicker } from "./components/ThemePicker";
 import { WeekdayFilter } from "./components/WeekdayFilter";
 import { setIsInitializing, useInitializingEntity } from "./state/isInitializing";
 import { useCreatedAt } from "./state/places";
-import { useSlotGroupsByDate } from "./state/slotsGroupedByDate";
+import { slotGroupsByDate } from "./state/slotsGroupedByDate";
 import { useTitleEntity } from "./state/title";
 import { WhatIsThisPopover } from "./components/WhatIsThisPopover";
+import InfiniteScroll from "react-infinite-scroll-component";
+
 import "./App.css";
+import {
+  getNextPage,
+  hasNextPage,
+  infiniteSlotGroups,
+  page,
+  totalPageCount,
+} from "./state/infiniteSlotGroups";
+import { Stats } from "./components/Stats";
 
 export default function App() {
   const isInitializing = useInitializingEntity();
   const createdAt = useCreatedAt();
   const titleLower = useTitleEntity((state) => state.toLowerCase());
-  const slotGroupsByDate = useSlotGroupsByDate();
+  const _slotGroupsByDate = slotGroupsByDate.use();
+  const _infiniteSlotGroups = infiniteSlotGroups.use();
+  const _hasNextPage = hasNextPage.use();
+  const _totalPageCount = totalPageCount.use();
+  const _page = page.use();
 
   useEffect(() => {
     themeChange(false);
@@ -49,6 +63,19 @@ export default function App() {
       }
     });
   }, []);
+
+  const onScroll = () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = document.documentElement.clientHeight;
+    if (scrollTop + clientHeight >= scrollHeight) {
+      getNextPage();
+    }
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [_infiniteSlotGroups]);
 
   return (
     <div className="overflow-scroll flex flex-col" id="app-inner">
@@ -97,19 +124,34 @@ export default function App() {
             </h2>
             <PlaceFilterTree className="mb-2" />
           </section>
+          <section aria-label="Result stats" className="p-4">
+            <Stats />
+          </section>
           <section aria-label="Available space to rent">
-            {slotGroupsByDate.length > 0 &&
-              slotGroupsByDate.map(([date, slots]) => (
-                <SlotGroup
-                  key={date}
-                  slots={slots}
-                  title={DateTime.fromISO(date).toLocaleString({
-                    weekday: "short",
-                    month: "long",
-                    day: "2-digit",
-                  })}
-                />
-              ))}
+            {_totalPageCount > 0 && (
+              <>
+                {_infiniteSlotGroups.length > 0 &&
+                  _infiniteSlotGroups.map(([date, slots]) => (
+                    <SlotGroup
+                      key={date}
+                      slots={slots}
+                      title={DateTime.fromISO(date).toLocaleString({
+                        weekday: "short",
+                        month: "long",
+                        day: "2-digit",
+                      })}
+                    />
+                  ))}
+                <p className="p-4 pb-0">
+                  {_hasNextPage
+                    ? "There are more slots. Keep scrolling!"
+                    : "That's all for now! Try different filters."}
+                </p>
+                <p className="p-4">
+                  {_page + 1} / {_totalPageCount} pages. {_slotGroupsByDate.length} groups
+                </p>
+              </>
+            )}
           </section>
           <button
             aria-label="Back to top"

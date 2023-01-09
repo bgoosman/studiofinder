@@ -23,19 +23,28 @@ export type ResolvedSlot = Slot & {
   rates?: RentalRate[];
 };
 
+const compare = <T extends Slot>(a: T, b: T): number => {
+  const aStart = DateTime.fromISO(a.start);
+  const bStart = DateTime.fromISO(b.start);
+  if (aStart < bStart) {
+    return -1;
+  } else if (aStart > bStart) {
+    return 1;
+  } else {
+    return 0;
+  }
+};
+
+const equals = <T extends Slot>(x: T, y: T): boolean => {
+  return x.start === y.start && x.end === y.end;
+};
+
 export const slotsOrderedByDate = {
-  compare: (a, b) => {
-    const aStart = DateTime.fromISO(a.start);
-    const bStart = DateTime.fromISO(b.start);
-    if (aStart < bStart) {
-      return -1;
-    } else if (aStart > bStart) {
-      return 1;
-    } else {
-      return 0;
-    }
-  },
-  equals: function (x: Slot, y: Slot): boolean {
-    return x.start === y.start && x.end === y.end;
-  },
+  compare: compare<Slot>,
+  equals: equals<Slot>,
 } as Ord<Slot>;
+
+export const resolvedSlotsOrderedByDate = {
+  compare: compare<ResolvedSlot>,
+  equals: equals<ResolvedSlot>,
+} as Ord<ResolvedSlot>;

@@ -19,6 +19,7 @@ import {
   now,
   parseDate,
 } from "../datetime/datetime-fns";
+import { mergeOverlappingSlots } from "../slots/mergeOverlappingSlots";
 import { Conditional } from "../types/Conditional";
 import { Link } from "../types/Link";
 import { numberRange } from "../types/NumberRange";
@@ -26,7 +27,7 @@ import { withPlaces, withSlots } from "../types/Place";
 import { RateValidIf } from "../types/RateValidIf";
 import { RentalRate } from "../types/RentalRate";
 import { RentalType } from "../types/RentalType";
-import { Slot, wrapLegacyGetSlots } from "../types/Slot";
+import { Slot, slotsOrderedByDate, wrapLegacyGetSlots } from "../types/Slot";
 
 const BAX_EMAIL_TEMPLATE = `Hello, 
 
@@ -109,8 +110,12 @@ const getSlotsByRoom = pipe([
 
 const getSlots = (room: string) =>
   wrapLegacyGetSlots(() =>
-    getSlotsByRoom().then((slotsByRoom: Record<string, Slot[]>) => slotsByRoom[room])
+    getSlotsByRoom().then((slotsByRoom: Record<string, Slot[]>) =>
+      mergeOverlappingSlots(slotsByRoom[room].sort(slotsOrderedByDate.compare))
+    )
   );
+
+// getSlots("Studio B")().then((slots) => slots); //?
 
 const bookingStrategy = {
   type: "email",

@@ -80,13 +80,11 @@ describe("Gibney Dance Center", () => {
               }),
               {}
             );
-          console.log({ url: req.url, parsedBody });
           const value = {
             url: req.url,
             body: parsedBody,
           };
           delete value.body[""];
-          console.log({ value });
 
           // Cypress won't let us execute tasks inside the intercept callback, so we use
           // the undocumented cy.now() function to execute the task immediately.

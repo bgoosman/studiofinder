@@ -15,14 +15,16 @@ export const WeekdayFilter = ({ label, weekday }: DayFilterProps) => {
     <Switch
       as={Fragment}
       checked={checked}
-      onChange={(newChecked: boolean) => setSlotFilter("weekday", setWeekdayEnabled(newChecked)(weekday))}
+      onChange={(newChecked: boolean) =>
+        setSlotFilter("weekday", setWeekdayEnabled(newChecked)(weekday))
+      }
     >
       {({ checked }) => (
         <button
           aria-label={label}
           className={classNames(
-            "btn",
-            "w-12 h-12",
+            "btn btn-sm",
+            "px-4 py-2",
             {
               "btn-ghost": !checked,
               "btn-primary": checked,

@@ -7,7 +7,7 @@ import { resolvedSlotsGroupedByDateEntity } from "./slotsGroupedByDate";
 it("slots respect the filters", () => {
   initSlotFilters();
 
-  const justTheWeekend = {
+  const everyday = {
     0: true,
     1: true,
     2: true,
@@ -20,11 +20,11 @@ it("slots respect the filters", () => {
   const hours = { min: 0, max: 24 };
   const justStudioA = { "Universe>Brooklyn>Triskelion Arts>Theater": true };
 
-  setSlotFilter("weekday", () => justTheWeekend);
+  setSlotFilter("weekday", () => everyday);
   setSlotFilter("hour", () => hours);
   setSlotFilter("place", () => justStudioA);
 
-  expect(getSlotFilter("weekday")).toEqual(justTheWeekend);
+  expect(getSlotFilter("weekday")).toEqual(everyday);
   expect(getSlotFilter("hour")).toEqual(hours);
   expect(getSlotFilter("place")).toEqual(justStudioA);
 
