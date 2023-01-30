@@ -1,5 +1,4 @@
 import * as T from "fp-ts/Task";
-import * as TE from "fp-ts/TaskEither";
 import { Amenity } from "./Amenity";
 import { Conditional } from "./Conditional";
 import { EmailStrategy } from "./EmailStrategy";
@@ -47,7 +46,7 @@ export type ResolvedPlace = {
 
 export function makePlace(
   name: string,
-  { meta, slots = TE.of([]), places = [] }: PlaceOptions
+  { meta, slots = () => Promise.resolve([]), places = [] }: PlaceOptions
 ): Place {
   // Explode the conditional so it's easier to match allowed types
   meta.rates?.forEach((rate) => {

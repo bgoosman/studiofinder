@@ -1,5 +1,4 @@
 import * as A from "fp-ts/Array";
-import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
 import * as T from "fp-ts/Task";
 import { cloneDeep, omit } from "lodash";
@@ -50,21 +49,17 @@ export const resolvePlace = async (
   const { name, meta, places } = place;
   path.push(name);
   const id = path.join(">");
-  const slotsEither = await place.slots();
-  if (E.isLeft(slotsEither)) {
-    throw new Error(`Error resolving slots for ${id}: ${slotsEither.left}`);
-  } else {
-    return {
-      id,
-      name,
-      path,
-      slots: await pipe(
-        await map(resolveSlot(id, place))(slotsEither.right),
-        A.filter((slot: ResolvedSlot) => new Date(slot.start) > new Date()),
-        A.sort(resolvedSlotsOrderedByDate)
-      ),
-      meta: await resolvePlaceMeta(place),
-      places: await map((place: Place) => resolvePlace(place, [...path]))(places),
-    };
-  }
+  const slots = await place.slots();
+  return {
+    id,
+    name,
+    path,
+    slots: await pipe(
+      await map(resolveSlot(id, place))(slots),
+      A.filter((slot: ResolvedSlot) => new Date(slot.start) > new Date()),
+      A.sort(resolvedSlotsOrderedByDate)
+    ),
+    meta: await resolvePlaceMeta(place),
+    places: await map((place: Place) => resolvePlace(place, [...path]))(places),
+  };
 };

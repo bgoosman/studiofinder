@@ -8,11 +8,8 @@
  */
 
 import * as cheerio from "cheerio";
-import { pipe } from "fp-ts/function";
 import * as T from "fp-ts/Task";
-import * as TE from "fp-ts/TaskEither";
 import { DateTime } from "luxon";
-import { safeFetch, safeJson } from "../fp-ts/fp-ts-functions";
 
 import { dateRange, DateRange, monthsFrom, now } from "../datetime/datetime-fns";
 import { invertSlots } from "../slots/invertSlots";
@@ -22,19 +19,6 @@ import { PlaceMeta, withPlaces, withSlots } from "../types/Place";
 import { RateValidIf } from "../types/RateValidIf";
 import { RentalType } from "../types/RentalType";
 import { Slot } from "../types/Slot";
-
-type FetchSlotsOptions = {
-  rvc: string;
-  rvt: string;
-  range: DateRange;
-};
-
-type BookingsJson = {
-  bookings: {
-    start: string;
-    end: string;
-  }[];
-};
 
 const tokensUrl = "https://thewoods.skedda.com/booking?viewtype=2";
 const zone = "America/New_York";
@@ -55,59 +39,24 @@ const getRVT = async (response: Response) => {
   return Array.isArray(vals) ? vals[0] : vals;
 };
 
-const getOptionsWithTokens = (response: Response) =>
-  TE.tryCatch(
-    async (): Promise<FetchSlotsOptions> => {
-      const rvc = getRVC(response);
-      const rvt = await getRVT(response);
-      return { rvc, rvt, range } as FetchSlotsOptions;
-    },
-    () => new Error("Could not get options")
-  );
-
-const getBookingsResponseWithOptions = (options: FetchSlotsOptions) =>
-  safeFetch(bookingsUrl(options.range), {
+const getSlots = async () => {
+  const response = await fetch(tokensUrl);
+  const rvc = getRVC(response);
+  const rvt = await getRVT(response);
+  const bookingsResponse = await fetch(bookingsUrl(range), {
     headers: {
       authority: "thewoods.skedda.com",
-      cookie: `X-Skedda-RequestVerificationCookie=${options.rvc}`,
+      cookie: `X-Skedda-RequestVerificationCookie=${rvc}`,
       dnt: "1",
       referrer: tokensUrl,
-      "x-skedda-requestverificationtoken": options.rvt,
+      "x-skedda-requestverificationtoken": rvt,
     },
-  });
-
-const verifyBookingsJson = (json: unknown): TE.TaskEither<Error, BookingsJson> => {
-  const invalidJson = TE.left(new Error("Invalid JSON"));
-
-  if (typeof json !== "object" || json === null) {
-    return invalidJson;
-  }
-
-  const { bookings } = json as BookingsJson;
-  if (!Array.isArray(bookings)) {
-    return invalidJson;
-  }
-
-  return TE.right(json as BookingsJson);
-};
-
-const getSlotsFromBookingsJson = (json: BookingsJson) => {
-  const unavailability = json.bookings.map((booking) =>
-    Slot.of(booking.start, booking.end)
-  );
-  const slots = invertSlots({ range, hours: [0, 23] })(unavailability);
-  return slots;
-};
-
-const getSlots = pipe(
-  safeFetch(tokensUrl),
-  // chain is crucial to unwrap nested TE
-  TE.chain(getOptionsWithTokens),
-  TE.chain(getBookingsResponseWithOptions),
-  TE.chain(safeJson),
-  TE.chain(verifyBookingsJson),
-  TE.map(getSlotsFromBookingsJson)
-);
+  } as RequestInit);
+  const json = await bookingsResponse.json();
+  const unavailability = json.bookings.map((booking: Slot) => Slot.of(booking.start, booking.end));
+  const inverted = invertSlots({ range, hours: [0, 23] })(unavailability);
+  return inverted;
+}
 
 const getPlaceMeta = (): PlaceMeta => ({
   links: [
@@ -174,5 +123,5 @@ const getPlaceMeta = (): PlaceMeta => ({
 });
 
 export const thewoods = withPlaces("The Woods", {}, [
-  withSlots("The Woods", getPlaceMeta(), getSlots),
+  withSlots("The Woods", getPlaceMeta(), () => getSlots()),
 ]);

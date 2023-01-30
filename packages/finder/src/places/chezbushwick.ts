@@ -21,19 +21,16 @@ import { Photo } from "../types/Photo";
 import { withPlaces, withSlots } from "../types/Place";
 import { RateValidIf } from "../types/RateValidIf";
 import { RentalType } from "../types/RentalType";
-import { wrapLegacyGetSlots } from "../types/Slot";
 
 const range = dateRange(now(), monthsFrom(3));
-const getSlots = wrapLegacyGetSlots(
-  pipe([
-    fetchGoogleCalendar({ calendarId: "k2ag5rf4m10vmfpqv31t5mhig4", range }),
-    map(mapGoogleEventToSlot),
-    invertSlots({
-      range,
-      hours: numberRange(7, 23),
-    }),
-  ])
-);
+const getSlots = pipe([
+  fetchGoogleCalendar({ calendarId: "k2ag5rf4m10vmfpqv31t5mhig4", range }),
+  map(mapGoogleEventToSlot),
+  invertSlots({
+    range,
+    hours: numberRange(7, 23),
+  }),
+]);
 
 export const chezbushwick = withPlaces("Chez Bushwick", {}, [
   withSlots(

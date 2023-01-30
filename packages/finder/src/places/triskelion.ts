@@ -9,18 +9,15 @@ import { numberRange } from "../types/NumberRange";
 import { withPlaces, withSlots } from "../types/Place";
 import { RateValidIf } from "../types/RateValidIf";
 import { RentalType } from "../types/RentalType";
-import { wrapLegacyGetSlots } from "../types/Slot";
 
 const range = dateRange(now(), daysFrom(60));
 const hours = numberRange(8, 23);
 const getSlots = (calendarId: string) =>
-  wrapLegacyGetSlots(
     pipe([
       fetchGoogleCalendar({ calendarId, range }),
       map(mapGoogleEventToSlot),
       invertSlots({ range, hours }),
     ])
-  );
 
 const commonLinks = [
   T.of(Link.of("About Triskelion Arts", "https://www.triskelionarts.org/about-us")),

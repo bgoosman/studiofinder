@@ -10,7 +10,6 @@ import { numberRange } from "../types/NumberRange";
 import { withPlaces, withSlots } from "../types/Place";
 import { RateValidIf } from "../types/RateValidIf";
 import { RentalType } from "../types/RentalType";
-import { wrapLegacyGetSlots } from "../types/Slot";
 
 const links: T.Task<Link>[] = [
   T.of(Link.of("Rental Policies", "https://www.cprnyc.org/rentals")),
@@ -58,19 +57,17 @@ const range = dateRange(
 );
 
 const getSlots = (calendarId: string) =>
-  wrapLegacyGetSlots(
-    pipe([
-      fetchGoogleCalendar({
-        calendarId,
-        range,
-      }),
-      map(mapGoogleEventToSlot),
-      invertSlots({
-        range,
-        hours: numberRange(9, 21),
-      }),
-    ])
-  );
+  pipe([
+    fetchGoogleCalendar({
+      calendarId,
+      range,
+    }),
+    map(mapGoogleEventToSlot),
+    invertSlots({
+      range,
+      hours: numberRange(9, 21),
+    }),
+  ]);
 
 /**
  * Rehearsals must be booked for a minimum of 2 hours. If only a smaller increment of

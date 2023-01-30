@@ -17,7 +17,7 @@ import {
   formatDate,
   monthsFrom,
   now,
-  parseDate,
+  parseDate
 } from "../datetime/datetime-fns";
 import { mergeOverlappingSlots } from "../slots/mergeOverlappingSlots";
 import { Conditional } from "../types/Conditional";
@@ -27,7 +27,7 @@ import { withPlaces, withSlots } from "../types/Place";
 import { RateValidIf } from "../types/RateValidIf";
 import { RentalRate } from "../types/RentalRate";
 import { RentalType } from "../types/RentalType";
-import { Slot, slotsOrderedByDate, wrapLegacyGetSlots } from "../types/Slot";
+import { Slot, slotsOrderedByDate } from "../types/Slot";
 
 const BAX_EMAIL_TEMPLATE = `Hello, 
 
@@ -108,14 +108,14 @@ const getSlotsByRoom = pipe([
   (slots: Slot[]) => groupBy(slots, "room"),
 ]);
 
-const getSlots = (room: string) =>
-  wrapLegacyGetSlots(() =>
-    getSlotsByRoom().then((slotsByRoom: Record<string, Slot[]>) =>
-      mergeOverlappingSlots(slotsByRoom[room].sort(slotsOrderedByDate.compare))
-    )
-  );
+const getSlots = (room: string) => async () => {
+  const slotsByRoom = await getSlotsByRoom();
+  const sorted = slotsByRoom[room].sort(slotsOrderedByDate.compare)
+  const merged = mergeOverlappingSlots(sorted)
+  return merged
+}
 
-// getSlots("Studio B")().then((slots) => slots); //?
+// getSlots("Studio B")().then((slots) => slots);
 
 const bookingStrategy = {
   type: "email",

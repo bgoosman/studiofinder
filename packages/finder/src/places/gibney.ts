@@ -10,7 +10,6 @@ import { PlaceMeta } from "../types/Place";
 import { RateValidIf } from "../types/RateValidIf";
 import { Rate, RentalRate } from "../types/RentalRate";
 import { RentalType } from "../types/RentalType";
-import { wrapLegacyGetSlots } from "../types/Slot";
 
 export const gibneyLinks = [
   T.of(Link.of("Rental form", "https://gibney.force.com/")),
@@ -49,9 +48,7 @@ const twentyFourHourSpecial: Discount = {
 export const nonProfitDanceRehearsalDiscounts = [earlyBirdSpecial, twentyFourHourSpecial];
 
 export const getGibneySlots = (name: string) => (child: string) =>
-  wrapLegacyGetSlots(
-    fromJsonFiles(path.join(__dirname, "../../../gibney/dist"), `${name}/${child}`)
-  );
+  fromJsonFiles(path.join(__dirname, "../../../gibney/dist"), `${name}/${child}`)
 
 export const getStudioMeta = (nonProfitDanceRehearsalRate: Rate): PlaceMeta => {
   const baseRate: RentalRate = {

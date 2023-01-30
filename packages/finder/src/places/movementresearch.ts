@@ -1,10 +1,7 @@
-import { flow } from "fp-ts/lib/function";
-import * as RA from "fp-ts/ReadonlyArray";
 import * as T from "fp-ts/Task";
-import * as TE from "fp-ts/TaskEither";
 import { DateTime } from "luxon";
+import { parseString } from "xml2js";
 import { DateRange, dateRange } from "../datetime/datetime-fns";
-import { safeFetch, safeText, xmlToJson } from "../fp-ts/fp-ts-functions";
 import { invertSlots } from "../slots/invertSlots";
 import { mergeOverlappingSlots } from "../slots/mergeOverlappingSlots";
 import { Conditional } from "../types/Conditional";
@@ -14,7 +11,7 @@ import { withPlaces, withSlots } from "../types/Place";
 import { RateValidIf } from "../types/RateValidIf";
 import { RentalRate } from "../types/RentalRate";
 import { RentalType } from "../types/RentalType";
-import { Slot, slotsOrderedByDate } from "../types/Slot";
+import { slotsOrderedByDate } from "../types/Slot";
 
 const emailTemplate = `I'd like to rent space,
 
@@ -82,10 +79,6 @@ const schema = {
         templateId: "1-2-063507084006-0000000-10054_084170519067110",
         range,
       },
-      {
-        templateId: "1-2-063493167267-0000000-02841_000102859023757",
-        range,
-      },
     ],
   },
   "Ninth St": {
@@ -113,6 +106,7 @@ type UrlOptions = {
 
 const formatDate = (date: Date) =>
   encodeURIComponent(DateTime.fromJSDate(date).toFormat("MM-dd-yyyy"));
+
 const getUrl = (options: UrlOptions) =>
   `https://sosimple.foxtailtech.com/893/sosimple/sosimple_cal.php?template=${
     options.templateId
@@ -134,35 +128,39 @@ const jsonToSlots = (json: unknown) => {
   }));
 };
 
-const optionsToSlots = flow(
-  getUrl,
-  safeFetch,
-  TE.chain(safeText),
-  TE.chain(xmlToJson),
-  TE.map(jsonToSlots)
-);
+const xmlToJson = (xml: string) =>
+  new Promise((resolve, reject) => {
+    parseString(xml, (err: unknown, result: unknown) => {
+      if (err) {
+        reject("Error parsing XML string");
+      } else {
+        resolve(result);
+      }
+    });
+  });
 
-const getSlots = flow(
-  RA.map(optionsToSlots),
-  TE.sequenceArray,
-  TE.map(RA.flatten),
-  TE.map(RA.sort(slotsOrderedByDate)),
-  TE.map((ra: ReadonlyArray<Slot>) => ra as Array<Slot>),
-  TE.map(mergeOverlappingSlots),
-  TE.map(
-    invertSlots({
-      range,
-      hours,
-    })
-  )
-);
+const optionsToSlots = async (options: UrlOptions) => {
+  const url = getUrl(options);
+  const result = await fetch(url);
+  const text = await result.text();
+  const json = await xmlToJson(text);
+  return jsonToSlots(json);
+};
 
-// getSlots(schema["Courtyard"].slots)().then((slots) =>
-//   slots.right.map((s) => ({
-//     start: DateTime.fromISO(s.start).toLocaleString(DateTime.DATETIME_FULL),
-//     end: DateTime.fromISO(s.end).toLocaleString(DateTime.DATETIME_FULL),
-//   }))
-// ); //?
+const getSlots = async (options: Array<UrlOptions>) => {
+  const slots = await Promise.all(options.map(optionsToSlots));
+  const sorted = slots.flat().sort(slotsOrderedByDate.compare);
+  const merged = mergeOverlappingSlots(sorted);
+  const inverted = invertSlots({
+    range,
+    hours,
+  })(merged);
+  return inverted;
+};
+
+// getSlots(schema["Courtyard"].slots).then((slots) => {
+//   console.log(slots); 
+// })
 
 export const cc122 = withPlaces(
   "122 Community Center",
@@ -170,6 +168,6 @@ export const cc122 = withPlaces(
     shortName: "122CC",
   },
   Object.entries(schema).map(([name, { links, rates, slots }]) =>
-    withSlots(name, { links: links.map(T.of), bookingStrategy, rates }, getSlots(slots))
+    withSlots(name, { links: links.map(T.of), bookingStrategy, rates }, () => getSlots(slots))
   )
 );
