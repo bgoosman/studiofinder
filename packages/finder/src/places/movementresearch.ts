@@ -38,7 +38,7 @@ const bookingStrategy = {
   iana: "America/New_York",
 };
 
-const range = dateRange(new Date(), new Date("2023-01-30T23:59:59.000-05:00"));
+const range = dateRange(new Date(), new Date("2023-03-31T23:59:59.000-05:00"));
 const hours = numberRange(9, 22);
 const cc122Link = Link.of(
   "122CC Info",
@@ -121,7 +121,7 @@ type EventsJson = {
   };
 };
 const jsonToSlots = (json: unknown) => {
-  const events = json as EventsJson;
+  const events = json as EventsJson;//?
   return events.data.event.map((event) => ({
     start: DateTime.fromFormat(event.start_date[0], "MM/dd/yyyy HH:mm:ss").toISO(),
     end: DateTime.fromFormat(event.end_date[0], "MM/dd/yyyy HH:mm:ss").toISO(),
@@ -140,7 +140,7 @@ const xmlToJson = (xml: string) =>
   });
 
 const optionsToSlots = async (options: UrlOptions) => {
-  const url = getUrl(options);
+  const url = getUrl(options);//?
   const result = await fetch(url);
   const text = await result.text();
   const json = await xmlToJson(text);
