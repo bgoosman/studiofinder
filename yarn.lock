@@ -5929,9 +5929,9 @@ rimraf@^3.0.2:
     glob "^7.1.3"
 
 rubico@^1.9.3:
-  version "1.9.3"
-  resolved "https://registry.npmjs.org/rubico/-/rubico-1.9.3.tgz#c690a92bbeb33a597a025b7321ae1ce974a0b6c2"
-  integrity sha512-1J5kcltRCIYBYDs+fEZpUyEo3jd+FDyF1mrvtGNnJeaPlsz9r9xUwIWVRekZu2+ygagMVs1cSHUFi3aRMvKHpA==
+  version "1.9.5"
+  resolved "https://registry.npmjs.org/rubico/-/rubico-1.9.5.tgz#5d6b56b840c7839c20a192c1bb7e35330be1b720"
+  integrity sha512-6baLZ3IBin91fbniFDdnGSvQOISFoX7r/C4W9s3TEIOGPDORwzHo3B3LKvYtPaIdvzUt4FsUOgM3n4J6xCwsJg==
 
 run-async@^2.2.0:
   version "2.4.1"
