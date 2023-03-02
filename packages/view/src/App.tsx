@@ -40,7 +40,7 @@ export default function App() {
   const _page = page.use();
 
   useEffect(() => {
-    themeChange(false);
+    // themeChange(false);
   }, []);
 
   useEffect(() => {
@@ -90,7 +90,7 @@ export default function App() {
           <h1 className="text-4xl pr-2">{titleLower}</h1>
         </div>
         <div className="flex-none flex gap-x-2 items-center">
-          <ThemePicker />
+          {/* <ThemePicker /> */}
           <WhatIsThisPopover className="z-20" />
         </div>
       </header>
