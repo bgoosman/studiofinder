@@ -1224,9 +1224,9 @@
   integrity sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==
 
 "@types/node@*", "@types/node@^18.11.18":
-  version "18.14.2"
-  resolved "https://registry.npmjs.org/@types/node/-/node-18.14.2.tgz#c076ed1d7b6095078ad3cf21dfeea951842778b1"
-  integrity sha512-1uEQxww3DaghA0RxqHx0O0ppVlo43pJhepY51OxuQIKHpjbnYLA7vcdwioNPzIqmC2u3I/dmylcqjlh0e7AyUA==
+  version "18.14.3"
+  resolved "https://registry.npmjs.org/@types/node/-/node-18.14.3.tgz#485070908df2e7b476ecaf83108e50b4d925a153"
+  integrity sha512-1y36CC5iL5CMyKALzwX9cwwxcWIxvIBe3gzs4GrXWXEQ8klQnCZ2U/WDGiNrXHmQcUhnaun17XG9TEIDlGj2RA==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -6543,9 +6543,9 @@ text-table@^0.2.0:
   integrity sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==
 
 theme-change@^2.2.0:
-  version "2.3.0"
-  resolved "https://registry.npmjs.org/theme-change/-/theme-change-2.3.0.tgz#9fec33d44c514253a0b0e9a65df4bcfa8bf9f741"
-  integrity sha512-MOv3g4dQfte9Q7WZKyLRshcw9JqcJCwB+CO1OS7lN1WMJcQyPzmpgwm5Ve55vQ4qt62g++A9+8s1x+vRPpm42w==
+  version "2.4.0"
+  resolved "https://registry.npmjs.org/theme-change/-/theme-change-2.4.0.tgz#db9e7fded16a2fcd5555e19fa3755ef9ff4996da"
+  integrity sha512-HbMckoxM7sV8L7wk53S5ceiBQWcTxFozuvUmvjdjPqpyVFkzPQHylSsDHYyT8qTruORe+1Sft7ExqlXQEeWHBA==
 
 throttle-debounce@^2.1.0:
   version "2.3.0"
