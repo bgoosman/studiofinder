@@ -364,9 +364,9 @@
     use-isomorphic-layout-effect "^1.1.1"
 
 "@headlessui/react@^1.7.7":
-  version "1.7.12"
-  resolved "https://registry.npmjs.org/@headlessui/react/-/react-1.7.12.tgz#9ab2baa3c4f632782631e00937f9531a34033619"
-  integrity sha512-FhSx5V+Qp0GvbTpaxyS+ymGDDNntCacClWsk/d8Upbr19g3AsPbjfPk4+m2CgJGcuCB5Dz7LpUIOAbvQTyjL2g==
+  version "1.7.13"
+  resolved "https://registry.npmjs.org/@headlessui/react/-/react-1.7.13.tgz#fd150b394954e9f1d86ed2340cffd1217d6e7628"
+  integrity sha512-9n+EQKRtD9266xIHXdY5MfiXPDfYwl7zBM7KOx2Ae3Gdgxy8QML1FkCMjq6AsOf0l6N9uvI4HcFtuFlenaldKg==
   dependencies:
     client-only "^0.0.1"
 
@@ -2760,9 +2760,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.284:
-  version "1.4.318"
-  resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.318.tgz#7e0755bb80638175327bd9bc14dc4b9a0dbb62b5"
-  integrity sha512-EQHZE/yO9Sg6gIP9VezPltDWFA8pMnv7dNRb4Y0ukels3iyXTH313gbHvK/tZwUF+jeh5F5fDf1rqWb8ZWX8fw==
+  version "1.4.319"
+  resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.319.tgz#75cfecf8bc4522d1450713db1f2096fe73991cdb"
+  integrity sha512-WeoI6NwZUgteKB+Wmn692S35QycwwNxwgTomNnoCJ79znBAjtBi6C/cIW62JkXmpJRX5rKNYSLDBdAM8l5fH0w==
 
 emittery@^0.13.1:
   version "0.13.1"
@@ -5935,9 +5935,9 @@ rimraf@^3.0.2:
     glob "^7.1.3"
 
 rubico@^1.9.3:
-  version "1.9.5"
-  resolved "https://registry.npmjs.org/rubico/-/rubico-1.9.5.tgz#5d6b56b840c7839c20a192c1bb7e35330be1b720"
-  integrity sha512-6baLZ3IBin91fbniFDdnGSvQOISFoX7r/C4W9s3TEIOGPDORwzHo3B3LKvYtPaIdvzUt4FsUOgM3n4J6xCwsJg==
+  version "1.9.6"
+  resolved "https://registry.npmjs.org/rubico/-/rubico-1.9.6.tgz#f79aaa66b328b45085596248016ed8ae7e628561"
+  integrity sha512-/xIOpme9ZDjGCFZaqXc9O4YUGgjq2QcurwyPyOCsLy+BNsiYVenB/K9jfrjX3/RiCyPcSyBK3FcJievJ4g8yPg==
 
 run-async@^2.2.0:
   version "2.4.1"
