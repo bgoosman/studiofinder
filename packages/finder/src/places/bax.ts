@@ -121,7 +121,7 @@ const getSlots = (room: string) => async () => {
   return inverted
 }
 
-getSlots("Studio C")().then((slots) => slots);
+// getSlots("Studio C")().then((slots) => slots);
 
 const bookingStrategy = {
   type: "email",
