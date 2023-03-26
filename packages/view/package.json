@@ -5,10 +5,7 @@
   "scripts": {
     "slots": "mkdir -p slots/ && cp ../finder/dist/universe.json slots/universe.json",
     "build": "yarn run webpack --config webpack.prod.js",
-    "start": "yarn run webpack serve --open --config webpack.dev.js",
-    "deploy": "yarn surge:deploy",
-    "surge:tls": "surge ssl --pem ./surge.pem --domain https://rehearsal.fun",
-    "surge:deploy": "surge --project ./dist --domain https://rehearsal.fun"
+    "start": "yarn run webpack serve --open --config webpack.dev.js"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
