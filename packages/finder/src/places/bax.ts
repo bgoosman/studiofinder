@@ -19,6 +19,7 @@ import {
   now,
   parseDate
 } from "../datetime/datetime-fns";
+import { invertSlots } from "../slots/invertSlots";
 import { mergeOverlappingSlots } from "../slots/mergeOverlappingSlots";
 import { Conditional } from "../types/Conditional";
 import { Link } from "../types/Link";
@@ -100,6 +101,7 @@ const eventToSlot = (event: BaxEvent) => {
 };
 
 const range = dateRange(now(), monthsFrom(1));
+const hours = numberRange(9, 22)
 
 const getSlotsByRoom = pipe([
   fetchXml(range),
@@ -112,10 +114,14 @@ const getSlots = (room: string) => async () => {
   const slotsByRoom = await getSlotsByRoom();
   const sorted = slotsByRoom[room].sort(slotsOrderedByDate.compare)
   const merged = mergeOverlappingSlots(sorted)
-  return merged
+  const inverted = invertSlots({
+    range,
+    hours,
+  })(merged)
+  return inverted
 }
 
-// getSlots("Studio B")().then((slots) => slots);
+getSlots("Studio C")().then((slots) => slots);
 
 const bookingStrategy = {
   type: "email",
@@ -181,7 +187,7 @@ export const brooklynArtsExchange = withPlaces(
   "Brooklyn Arts Exchange",
   {
     shortName: "BAX",
-    hours: numberRange(9, 22),
+    hours,
   },
   [
     withSlots("Studio A", { bookingStrategy, links, rates }, getSlots("Studio A")),
