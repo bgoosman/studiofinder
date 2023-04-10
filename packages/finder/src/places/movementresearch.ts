@@ -12,7 +12,7 @@ import { withPlaces, withSlots } from "../types/Place";
 import { RateValidIf } from "../types/RateValidIf";
 import { RentalRate } from "../types/RentalRate";
 import { RentalType } from "../types/RentalType";
-import { slotsOrderedByDate } from "../types/Slot";
+import { Slot, slotsOrderedByDate } from "../types/Slot";
 
 const emailTemplate = `I'd like to rent space,
 
@@ -27,7 +27,7 @@ My name:
 
 Telephone:
 
-(initiated by rehearsal.fun)
+(initiated by studiofinder.fun)
 `;
 const bookingStrategy = {
   type: "email",
@@ -148,7 +148,7 @@ const optionsToSlots = async (options: UrlOptions) => {
 };
 
 const getSlots = async (options: Array<UrlOptions>) => {
-  const slots = await Promise.all(options.map(optionsToSlots));
+  const slots = await Promise.all(options.map(optionsToSlots)) as Slot[][];
   const sorted = slots.flat().sort(slotsOrderedByDate.compare);
   const merged = mergeOverlappingSlots(sorted);
   const inverted = invertSlots({
