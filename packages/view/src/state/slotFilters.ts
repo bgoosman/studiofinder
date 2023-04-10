@@ -9,7 +9,7 @@ import { reaction } from "./simpler-state/reaction";
 import { ResolvedSlots, slotsEntity } from "./slots";
 import {
   ResolvedSlotsGroupedByDate,
-  resolvedSlotsGroupedByDateEntity,
+  resolvedSlotsGroupedByDateEntity
 } from "./slotsGroupedByDate";
 
 export type SlotFilters = {
@@ -53,7 +53,7 @@ export const ordSlotStartDate: Ord<ResolvedSlot> = {
 };
 
 const getSlotStartDateString = (slot: ResolvedSlot) =>
-  DateTime.fromISO(slot.start).toISODate();
+  DateTime.fromISO(slot.start).toISODate()!;
 
 const computeResolvedSlotsGroupedByDateWithFilters = (
   options: SlotFilters
