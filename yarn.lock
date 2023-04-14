@@ -1218,9 +1218,9 @@
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
 
 "@types/lodash@^4.14.189", "@types/lodash@^4.14.191":
-  version "4.14.192"
-  resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.192.tgz#5790406361a2852d332d41635d927f1600811285"
-  integrity sha512-km+Vyn3BYm5ytMO13k9KTp27O75rbQ0NFw+U//g+PX7VZyjCioXaRFisqSIJRECljcTv73G3i6BpglNGHgUQ5A==
+  version "4.14.193"
+  resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.193.tgz#0ca0c10002983d25f6bc86c98fd703b21ba57b58"
+  integrity sha512-DWZ7ccyFsIYfwOlYfR6amRP9PfPmvqo0UluncNbu53W62GFwWT6rzgO3HzKaNbahUZTu/66OaQU3/JrtDo4X9w==
 
 "@types/luxon@^3.1.0", "@types/luxon@^3.2.0":
   version "3.3.0"
