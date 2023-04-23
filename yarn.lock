@@ -6185,11 +6185,12 @@ simple-swizzle@^0.2.2:
     is-arrayish "^0.3.1"
 
 simpler-state@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/simpler-state/-/simpler-state-1.2.0.tgz#fd78f0416e741d75b5b0ff70d8b0c46722e062c5"
-  integrity sha512-Gd6rlc3Rq0qQm78bGg+4qVJUvOPr874aN2LBxawQV71Q0f0Ub2HVqR4AUXnP26TgCL/PaQ/7yisbdJD8NJ8+oA==
+  version "1.2.1"
+  resolved "https://registry.npmjs.org/simpler-state/-/simpler-state-1.2.1.tgz#30e2ae9a3570785af37f03603ddf91022bd2e067"
+  integrity sha512-OFuMafaMPPWm3RKwrYhMjuC/CpUok6NV7fQKS8hzMsqv8ilUBgahcyUQo9unnawUxbrX4XAZubTf6gvq0cUyOQ==
   dependencies:
     "@babel/runtime" "^7.13.10"
+    use-sync-external-store "^1.0.0"
 
 sisteransi@^1.0.5:
   version "1.0.5"
@@ -6910,6 +6911,11 @@ use-sidecar@^1.1.2:
   dependencies:
     detect-node-es "^1.1.0"
     tslib "^2.0.0"
+
+use-sync-external-store@^1.0.0:
+  version "1.2.0"
+  resolved "https://registry.npmjs.org/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz#7dbefd6ef3fe4e767a0cf5d7287aacfb5846928a"
+  integrity sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
