@@ -1,12 +1,13 @@
 import * as A from "fp-ts/Array";
-import { pipe } from "fp-ts/lib/function";
 import * as T from "fp-ts/Task";
+import { pipe } from "fp-ts/lib/function";
 import { cloneDeep, omit } from "lodash";
 import { map } from "rubico";
+import { brooklynArtsExchange } from "./places/bax";
 import { resolveEmailStrategy } from "./resolvers/emailStrategy";
 import { Link } from "./types/Link";
 import { Place, ResolvedPlace, ResolvedPlaceMeta } from "./types/Place";
-import { ResolvedSlot, resolvedSlotsOrderedByDate, Slot } from "./types/Slot";
+import { ResolvedSlot, Slot, resolvedSlotsOrderedByDate } from "./types/Slot";
 
 // https://levelup.gitconnected.com/how-to-run-sequential-tasks-in-fp-ts-8aa3be991f33
 const resolveLinks = async (links: T.Task<Link>[]) =>
@@ -46,7 +47,7 @@ export const resolvePlace = async (
   place: Place,
   path: string[]
 ): Promise<ResolvedPlace> => {
-  const { name, meta, places } = place;
+  const { name, places } = place;
   path.push(name);
   const id = path.join(">");
   const slots = await place.slots();
@@ -63,3 +64,4 @@ export const resolvePlace = async (
     places: await map((place: Place) => resolvePlace(place, [...path]))(places),
   };
 };
+resolvePlace(brooklynArtsExchange, []).then(console.log);

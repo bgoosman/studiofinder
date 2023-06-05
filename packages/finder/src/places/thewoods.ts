@@ -13,8 +13,11 @@ import { DateTime } from "luxon";
 
 import { dateRange, DateRange, monthsFrom, now } from "../datetime/datetime-fns";
 import { invertSlots } from "../slots/invertSlots";
+import { Amenity } from "../types/Amenity";
 import { Conditional } from "../types/Conditional";
+import { Material } from "../types/Floor";
 import { Link } from "../types/Link";
+import { Photo } from "../types/Photo";
 import { PlaceMeta, withPlaces, withSlots } from "../types/Place";
 import { RateValidIf } from "../types/RateValidIf";
 import { RentalType } from "../types/RentalType";
@@ -53,15 +56,32 @@ const getSlots = async () => {
     },
   } as RequestInit);
   const json = await bookingsResponse.json();
-  const unavailability = json.bookings.map((booking: Slot) => Slot.of(booking.start, booking.end));
+  const unavailability = json.bookings.map((booking: Slot) =>
+    Slot.of(booking.start, booking.end)
+  );
   const inverted = invertSlots({ range, hours: [0, 23] })(unavailability);
   return inverted;
-}
+};
 
 const getPlaceMeta = (): PlaceMeta => ({
+  amenities: [Amenity.Mirror],
+  floor: {
+    type: Material.Wood,
+    size: "30 feet, 30 feet",
+  },
   links: [
     T.of(Link.of("About The Woods", "https://www.thewoodsuniverse.com/the-space.html")),
     T.of(Link.of("How to rent", "https://www.thewoodsuniverse.com/")),
+  ],
+  photos: [
+    Photo.of(
+      "column, wood floor, front door",
+      "https://www.thewoodsuniverse.com/uploads/1/2/4/0/124068959/img-0066_orig.jpg"
+    ),
+    Photo.of(
+      "back of room, windows, column",
+      "https://www.thewoodsuniverse.com/uploads/1/2/4/0/124068959/img-0126_orig.jpg"
+    ),
   ],
   rates: [
     {

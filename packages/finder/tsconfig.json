@@ -6,7 +6,9 @@
     "moduleResolution": "node",
     "outDir": "dist-resolver",
     "resolveJsonModule": true,
+    "skipLibCheck": true,
     "strict": true,
+    "strictNullChecks": true,
     "target": "ESNext",
     "types": ["node", "jest"]
   },

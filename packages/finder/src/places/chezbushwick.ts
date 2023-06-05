@@ -15,6 +15,7 @@ import { fetchGoogleCalendar, mapGoogleEventToSlot } from "../providers/googleCa
 import { invertSlots } from "../slots/invertSlots";
 import { Amenity } from "../types/Amenity";
 import { Conditional } from "../types/Conditional";
+import { Material } from "../types/Floor";
 import { Link } from "../types/Link";
 import { numberRange } from "../types/NumberRange";
 import { Photo } from "../types/Photo";
@@ -42,6 +43,10 @@ export const chezbushwick = withPlaces("Chez Bushwick", {}, [
         Amenity.ProjectionScreen,
         Amenity.WiFi,
       ],
+      floor: {
+        type: Material.Wood,
+        size: "23 feet,48 feet",
+      },
       links: [
         T.of(Link.of("How to rent", "https://www.chezbushwick.net/rentals")),
         T.of(Link.of("About Chez Bushwick", "https://www.chezbushwick.net/studio")),

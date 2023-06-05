@@ -50,9 +50,9 @@ export const nonProfitDanceRehearsalDiscounts = [earlyBirdSpecial, twentyFourHou
 export const getGibneySlots = (name: string) => (child: string) =>
   fromJsonFiles(path.join(__dirname, "../../../gibney/dist"), `${name}/${child}`)
 
-export const getStudioMeta = (nonProfitDanceRehearsalRate: Rate): PlaceMeta => {
+export const getStudioMeta = (meta: Partial<PlaceMeta> & {nonProfitDanceRehearsalRate: Rate}): PlaceMeta => {
   const baseRate: RentalRate = {
-    rate: nonProfitDanceRehearsalRate,
+    rate: meta.nonProfitDanceRehearsalRate,
     validIf: Conditional.some(
       RateValidIf.of({
         rentalHasTypes: Conditional.all(
@@ -64,6 +64,7 @@ export const getStudioMeta = (nonProfitDanceRehearsalRate: Rate): PlaceMeta => {
     ),
   };
   return {
+    floor: meta.floor,
     links: [...gibneyLinks],
     rates: [
       baseRate,

@@ -2,6 +2,7 @@ import * as T from "fp-ts/Task";
 import { Amenity } from "./Amenity";
 import { Conditional } from "./Conditional";
 import { EmailStrategy } from "./EmailStrategy";
+import { Floor } from "./Floor";
 import { Link } from "./Link";
 import { NumberRange } from "./NumberRange";
 import { Photo } from "./Photo";
@@ -12,8 +13,9 @@ import { GetSlots, ResolvedSlot } from "./Slot";
 export type PlaceMeta = {
   amenities?: Amenity[];
   bookingStrategy?: EmailStrategy;
-  links?: T.Task<Link>[];
+  floor?: Floor;
   hours?: NumberRange;
+  links?: T.Task<Link>[];
   maxOccupancy?: number;
   photos?: Photo[];
   rates?: Array<RentalRate>;

@@ -22,6 +22,7 @@ import {
 import { invertSlots } from "../slots/invertSlots";
 import { mergeOverlappingSlots } from "../slots/mergeOverlappingSlots";
 import { Conditional } from "../types/Conditional";
+import { Material } from "../types/Floor";
 import { Link } from "../types/Link";
 import { numberRange } from "../types/NumberRange";
 import { withPlaces, withSlots } from "../types/Place";
@@ -101,7 +102,7 @@ const eventToSlot = (event: BaxEvent) => {
 };
 
 const range = dateRange(now(), monthsFrom(1));
-const hours = numberRange(9, 22)
+const hours = numberRange(9, 22);
 
 const getSlotsByRoom = pipe([
   fetchXml(range),
@@ -112,14 +113,14 @@ const getSlotsByRoom = pipe([
 
 const getSlots = (room: string) => async () => {
   const slotsByRoom = await getSlotsByRoom();
-  const sorted = slotsByRoom[room].sort(slotsOrderedByDate.compare)
-  const merged = mergeOverlappingSlots(sorted)
+  const sorted = slotsByRoom[room].sort(slotsOrderedByDate.compare);
+  const merged = mergeOverlappingSlots(sorted);
   const inverted = invertSlots({
     range,
     hours,
-  })(merged)
-  return inverted
-}
+  })(merged);
+  return inverted;
+};
 
 // getSlots("Studio C")().then((slots) => slots);
 
@@ -190,9 +191,57 @@ export const brooklynArtsExchange = withPlaces(
     hours,
   },
   [
-    withSlots("Studio A", { bookingStrategy, links, rates }, getSlots("Studio A")),
-    withSlots("Studio B", { bookingStrategy, links, rates }, getSlots("Studio B")),
-    withSlots("Studio C", { bookingStrategy, links, rates }, getSlots("Studio C")),
-    withSlots("Studio D", { bookingStrategy, links, rates }, getSlots("Studio D")),
+    withSlots(
+      "Studio A",
+      {
+        bookingStrategy,
+        links,
+        rates,
+        floor: {
+          type: Material.Wood,
+          size: "26.5 feet,35 feet",
+        },
+      },
+      getSlots("Studio A")
+    ),
+    withSlots(
+      "Studio B",
+      {
+        bookingStrategy,
+        links,
+        rates,
+        floor: {
+          type: Material.Wood,
+          size: "26 feet,30 feet",
+        },
+      },
+      getSlots("Studio B")
+    ),
+    withSlots(
+      "Studio C",
+      {
+        bookingStrategy,
+        links,
+        rates,
+        floor: {
+          type: Material.Wood,
+          size: "18 feet,39 feet",
+        },
+      },
+      getSlots("Studio C")
+    ),
+    withSlots(
+      "Studio D",
+      {
+        bookingStrategy,
+        links,
+        rates,
+        floor: {
+          type: Material.Wood,
+          size: "28 feet,42 feet",
+        },
+      },
+      getSlots("Studio D")
+    ),
   ]
 );

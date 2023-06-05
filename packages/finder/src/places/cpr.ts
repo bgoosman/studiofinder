@@ -5,6 +5,7 @@ import { dateRange, now } from "../datetime/datetime-fns";
 import { fetchGoogleCalendar, mapGoogleEventToSlot } from "../providers/googleCalendar";
 import { invertSlots } from "../slots/invertSlots";
 import { Conditional } from "../types/Conditional";
+import { Material } from "../types/Floor";
 import { Link } from "../types/Link";
 import { numberRange } from "../types/NumberRange";
 import { withPlaces, withSlots } from "../types/Place";
@@ -87,6 +88,10 @@ export const centerForPerformanceResearch = withPlaces(
       "Large Studio",
       {
         bookingStrategy,
+        floor: {
+          type: Material.Marley,
+          size: '41 feet,45 feet',
+        },
         links,
         rates: [
           {
@@ -141,6 +146,10 @@ export const centerForPerformanceResearch = withPlaces(
       "Small Studio",
       {
         bookingStrategy,
+        floor: {
+          type: Material.Marley,
+          size: '15 feet,45 feet',
+        },
         links,
         rates: [
           {
