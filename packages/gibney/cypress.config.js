@@ -1,5 +1,3 @@
-const cheerio = require("cheerio");
-const moment = require("moment");
 let data = {};
 module.exports = {
   e2e: {
