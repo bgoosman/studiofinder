@@ -3,7 +3,6 @@ import * as T from "fp-ts/Task";
 import { pipe } from "fp-ts/lib/function";
 import { cloneDeep, omit } from "lodash";
 import { map } from "rubico";
-import { brooklynArtsExchange } from "./places/bax";
 import { resolveEmailStrategy } from "./resolvers/emailStrategy";
 import { Link } from "./types/Link";
 import { Place, ResolvedPlace, ResolvedPlaceMeta } from "./types/Place";
@@ -64,4 +63,4 @@ export const resolvePlace = async (
     places: await map((place: Place) => resolvePlace(place, [...path]))(places),
   };
 };
-resolvePlace(brooklynArtsExchange, []).then(console.log);
+// resolvePlace(brooklynArtsExchange, []).then(console.log);

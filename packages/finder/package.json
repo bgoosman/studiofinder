@@ -6,7 +6,7 @@
     "build": "rm -rf dist-resolver && yarn run tsc",
     "watch": "yarn run tsc --watch",
     "start": "node dist-resolver/index.js",
-    "resolve": "mkdir -p dist && yarn start --silent > dist/universe.json"
+    "resolve": "mkdir -p dist && yarn -s start > dist/universe.json"
   },
   "dependencies": {
     "@types/node": "^18.11.18",
