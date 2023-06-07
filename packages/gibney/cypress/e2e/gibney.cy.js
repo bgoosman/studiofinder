@@ -39,81 +39,62 @@ describe("Gibney Dance Center", () => {
       .click();
 
     cy.log("Page 3: Three questions");
+    cy.wait(2500);
     const selectValueByText = (i, text) =>
-      cy
-        .get("flowruntime-flow")
-        .find("lightning-select")
-        .eq(i)
-        .then(($el) => {
-          const el = $el[0];
-          const select = el.shadowRoot.querySelector("select");
-          const options = Array.from(select.options);
-          const option = options.find((option) => option.text === text);
-          option.selected = true;
-        });
+      cy.get("flowruntime-flow").find("select").eq(i).select(text);
     selectValueByText(0, "Yes");
     selectValueByText(1, "No");
     selectValueByText(2, "No");
-    cy.intercept(
-      // "/s/sfsites/aura?r=5&aura.FlowRuntimeConnect.navigateFlow=1",
-      "/s/sfsites/aura*",
-      (req) => {
-        if (
-          req.body &&
-          req.body.indexOf("renting_space.Default%20Choice.selected") !== -1
-        ) {
-          req.body = req.body.replace(
-            "renting_space.Default%20Choice.selected",
-            "renting_space.RentingforNonprofitorindividual.Yes.selected"
-          );
-          req.body = req.body.replace(
-            "holding_a_non_profit_or_for_profit.Default%20Choice.selected",
-            "holding_a_non_profit_or_for_profit.No.selected"
-          );
-          req.body = req.body.replace(
-            "inquiring_about_subsidized.Default%20Choice.selected",
-            "inquiring_about_subsidized.SubsidizedYesorNo.No.selected"
-          );
-          req.continue();
-          return;
-        }
-
-        if (
-          req.body &&
-          req.body.indexOf("GDSE_LWCExternalCalendarController") !== -1 &&
-          req.body.indexOf("getStudios") !== -1
-        ) {
-          const parsedBody = req.body
-            .split("&")
-            .map((param) => param.split("="))
-            .reduce(
-              (acc, [key, value]) => ({
-                ...acc,
-                [decodeURIComponent(key)]: decodeURIComponent(value),
-              }),
-              {}
-            );
-          const value = {
-            url: req.url,
-            body: parsedBody,
-          };
-          delete value.body[""];
-          console.log("Saving request", value);
-
-          // Cypress won't let us execute tasks inside the intercept callback, so we use
-          // the undocumented cy.now() function to execute the task immediately.
-          cy.now("task", "setValue", { key: "request", value });
-        }
+    cy.intercept("/s/sfsites/aura*", (req) => {
+      if (
+        req.body &&
+        req.body.indexOf("renting_space.Default%20Choice.selected") !== -1
+      ) {
+        req.body = req.body.replace(
+          "renting_space.Default%20Choice.selected",
+          "renting_space.RentingforNonprofitorindividual.Yes.selected"
+        );
+        req.body = req.body.replace(
+          "holding_a_non_profit_or_for_profit.Default%20Choice.selected",
+          "holding_a_non_profit_or_for_profit.No.selected"
+        );
+        req.body = req.body.replace(
+          "inquiring_about_subsidized.Default%20Choice.selected",
+          "inquiring_about_subsidized.SubsidizedYesorNo.No.selected"
+        );
+        req.continue();
+        return;
       }
-    );
+
+      if (
+        req.body &&
+        req.body.indexOf("GDSE_LWCExternalCalendarController") !== -1 &&
+        req.body.indexOf("getStudios") !== -1
+      ) {
+        const parsedBody = req.body
+          .split("&")
+          .map((param) => param.split("="))
+          .reduce(
+            (acc, [key, value]) => ({
+              ...acc,
+              [decodeURIComponent(key)]: decodeURIComponent(value),
+            }),
+            {}
+          );
+        const value = {
+          url: req.url,
+          body: parsedBody,
+        };
+        delete value.body[""];
+        console.log("Saving request", value);
+
+        // Cypress won't let us execute tasks inside the intercept callback, so we use
+        // the undocumented cy.now() function to execute the task immediately.
+        cy.now("task", "setValue", { key: "request", value });
+      }
+    });
     cy.wait(1000);
-    cy.get("flowruntime-flow")
-      .find("lightning-button")
-      .then(($el) => {
-        const el = $el[1];
-        console.log("lightning-button", el);
-        el.shadowRoot.querySelector("button").click();
-      });
+    cy.get("flowruntime-flow").find("button").eq(2).click();
 
     cy.log("Page 4: Select studio and date");
     const fromDate = moment().clone();
@@ -128,7 +109,7 @@ describe("Gibney Dance Center", () => {
     findSlotsByClicking({
       name: GIBNEY_280,
       selectedDate: fromDate.clone(),
-      selectValue: "280 Broadway (Lower Manhattan)",
+      selectedLocation: "280 Broadway (Lower Manhattan)",
     });
     cy.wait(2500);
     for (let i = 0; i <= daysBetween; i++) {
@@ -193,9 +174,24 @@ function findSlotsByClicking({ selectedLocation, selectedDate, name }) {
     `Checking availability for ${name} on ${selectedDate.format("YYYY-MM-DD")}`
   );
   cy.log(`Selecting ${selectedLocation} in dropdown`);
-  cy.get("flowruntime-flow").find("lightning-combobox").click();
-  cy.get("flowruntime-flow").find("lightning-base-combobox-item").eq(0).click();
-  cy.get("flowruntime-flow").find("lightning-button").eq(1).click();
+  cy.get("flowruntime-flow").find("button").eq(1).click();
+  cy.wait(2500);
+  // Don't ask me how this works, but it does. I'm not proud of it.
+  // Somehow it's necessary to click the screen field before clicking the dropdown item.
+  if (Cypress.config("isInteractive"))
+    cy.get("flowruntime-flow").find("flowruntime-screen-field").eq(3).click();
+  cy.get("flowruntime-flow")
+    .find("span")
+    .then(($el) => {
+      for (const el of $el) {
+        console.log("span", el, el.innerText);
+        if (el.innerText.indexOf(selectedLocation) !== -1) {
+          el.click();
+          break;
+        }
+      }
+    });
+  cy.get("flowruntime-flow").find("button").eq(3).click();
 }
 
 /**
