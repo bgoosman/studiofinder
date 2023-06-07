@@ -4,7 +4,7 @@ pipeline {
         stage('Build') {
             agent {
                 docker {
-                    image 'cypress/included:12.13'
+                    image 'cypress/included:12.13.0'
                 }
             }
             steps {
