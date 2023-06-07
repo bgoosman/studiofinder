@@ -109,7 +109,7 @@ export default function App() {
           <section aria-label="Filters" className="px-3">
             <h2 className="mb-2 flex items-center">
               <CalendarIcon className="h-4 w-4 mr-1" />
-              Find space to rent on these days:
+              Day
             </h2>
             <div className="w-full space-x-1 mb-3">
               <WeekdayFilter label="Sunday" weekday={"0"} />
@@ -122,7 +122,7 @@ export default function App() {
             </div>
             <h2 className="mb-2 flex items-center">
               <IconWood size={16} className="mr-1" />
-              With these floor types:
+              Floor
             </h2>
             <div className="w-full space-x-1 mb-3">
               <FloorMaterialFilter label="Wood" material={Material.Wood} />
@@ -131,7 +131,7 @@ export default function App() {
             </div>
             <h2 className="mb-2 flex items-center">
               <MapIcon className="h-4 w-4 mr-1" />
-              in these locations:
+              Location
             </h2>
             <PlaceFilterTree className="mb-2" />
           </section>
