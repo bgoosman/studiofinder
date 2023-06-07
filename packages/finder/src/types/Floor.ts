@@ -7,4 +7,4 @@ export enum Material {
 export type Floor = {
   type: Material;
   size: string;
-}
+};

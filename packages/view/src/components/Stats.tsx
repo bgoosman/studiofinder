@@ -35,7 +35,7 @@ export function Stats() {
         <div className="stat-figure text-secondary">
           <CalendarDaysIcon className="h-5 w-5" />
         </div>
-        <div className="stat-title">Filtered Slots</div>
+        <div className="stat-title">Slots</div>
         <div className="stat-value">{totalFilteredSlots}</div>
         <div className="stat-desc">
           out of {slots.length}
@@ -52,7 +52,7 @@ export function Stats() {
         <div className="stat-figure text-secondary">
           <MapPinIcon className="h-5 w-5" />
         </div>
-        <div className="stat-title">Toggled Rooms</div>
+        <div className="stat-title">Rooms</div>
         <div className="stat-value">{enabledRentablePlaces.length}</div>
         <div className="stat-desc">out of {rentablePlaces.length}</div>
       </div>

@@ -52,9 +52,9 @@ export function RatesPopover({
 }) {
   return (
     <Popover.Root>
-      <Popover.Trigger className={"btn btn-xs w-[80px]"}>
-        <span className="mr-1">
-          {rates && rates.length > 0 ? ` \$${rates[0]?.rate}` : ``}
+      <Popover.Trigger className={"btn btn-xs btn-ghost px-0"}>
+        <span className="mr-0">
+          {rates && rates.length > 0 ? ` \$${rates[0]?.rate}/hr` : ``}
         </span>{" "}
         <QuestionMarkCircleIcon className="h-4 w-4" />
       </Popover.Trigger>

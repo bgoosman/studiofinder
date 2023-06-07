@@ -1,5 +1,5 @@
-import { pipe } from "fp-ts/function";
 import * as R from "fp-ts/Record";
+import { pipe } from "fp-ts/function";
 import { getPlaceById, getPlacesById } from "../places";
 import { SlotFilter } from "./filters";
 

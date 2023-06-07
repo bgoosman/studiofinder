@@ -2,37 +2,59 @@ import { ResolvedSlot } from "finder/src/types/Slot";
 import { DateTime } from "luxon";
 import { entity } from "simpler-state";
 import { A, flow, NEA, Ord } from "../fp/fp-exports";
+import { floorMaterialFilter, FloorMaterialFilter } from "./filters/floorMaterialFilter";
 import { hourFilter, HourRange } from "./filters/hourFilter";
 import { placesFilter, PlacesFilter } from "./filters/placeFilter";
 import { Weekday, WeekdayFilters, weekdaysFilter } from "./filters/weekdayFilter";
+import { getPlaceById } from "./places";
 import { reaction } from "./simpler-state/reaction";
 import { ResolvedSlots, slotsEntity } from "./slots";
 import {
   ResolvedSlotsGroupedByDate,
-  resolvedSlotsGroupedByDateEntity
+  resolvedSlotsGroupedByDateEntity,
 } from "./slotsGroupedByDate";
 
 export type SlotFilters = {
   weekday: WeekdayFilters;
   hour: HourRange;
   place: PlacesFilter;
+  floorMaterial: FloorMaterialFilter;
 };
 export type SlotFilterKey = keyof SlotFilters;
 
 const filterSlotsWithOptions = (options: SlotFilters) => (slot: ResolvedSlot) => {
   const { weekday, hour, place } = options;
   const start = new Date(slot.start);
+  const {
+    meta: { floor },
+  } = getPlaceById(slot.placeId)!;
+  if (!floor) {
+    throw new Error(`No floor found for place ${slot.placeId}`);
+  }
 
-  if (!weekday[start.getDay() as Weekday]) {
+  // Don't include slots before the current time
+  if (start < new Date()) {
     return false;
   }
 
+  // Weekday filter
+  if (!weekday[String(start.getDay()) as Weekday]) {
+    return false;
+  }
+
+  // Hour range filter
   const startHour = start.getHours();
   if (startHour > hour.max || startHour < hour.min) {
     return false;
   }
 
+  // Place filter
   if (!place[slot.placeId]) {
+    return false;
+  }
+
+  // Floor material filter
+  if (!options.floorMaterial[floor.type]) {
     return false;
   }
 
@@ -69,20 +91,28 @@ const computeResolvedSlotsGroupedByDateWithFilters = (
   );
 
 // Each filter API is defined in a separate file, in filters, but their state is merged here.
-const slotFilters = entity<SlotFilters>(
-  {
-    weekday: weekdaysFilter.getDefault(),
-    hour: hourFilter.getDefault(),
-    place: placesFilter.getDefault(),
-  },
-  [
-    reaction((filters: SlotFilters) => {
-      resolvedSlotsGroupedByDateEntity.set(
-        computeResolvedSlotsGroupedByDateWithFilters(filters)(slotsEntity.get())
-      );
-    }),
-  ]
-);
+const fromSessionStorage = sessionStorage.getItem("slotFilters");
+const initialSlotFilters = fromSessionStorage
+  ? (JSON.parse(fromSessionStorage) as SlotFilters)
+  : {
+      weekday: weekdaysFilter.getDefault(),
+      hour: hourFilter.getDefault(),
+      place: placesFilter.getDefault(),
+      floorMaterial: floorMaterialFilter.getDefault(),
+    };
+const slotFilters = entity<SlotFilters>(initialSlotFilters, [
+  reaction((filters: SlotFilters) => {
+    resolvedSlotsGroupedByDateEntity.set(
+      computeResolvedSlotsGroupedByDateWithFilters(filters)(slotsEntity.get())
+    );
+  }),
+  reaction((filters: SlotFilters) => {
+    // save to session storage
+    const serialized = JSON.stringify(filters);
+    console.log("saving slot filters to session storage", serialized);
+    sessionStorage.setItem("slotFilters", serialized);
+  }),
+]);
 export const getSlotFilters = slotFilters.get;
 
 export type SlotFilterTransformer<A, B> = (sf: A) => B;

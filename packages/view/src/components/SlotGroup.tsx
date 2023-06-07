@@ -13,6 +13,7 @@ export interface SlotGroupProps {
 }
 
 export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
+  console.log("SlotGroup", { title, slots });
   return (
     <div className={classNames("card card-compact rounded-none", className)}>
       <div className="card-body p-0 md:p-4 mt-2">
@@ -22,15 +23,7 @@ export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
           </h2>
         </div>
         <div className="overflow-x-hidden">
-          <table className="table table-compact w-full">
-            <thead>
-              <tr>
-                <th className="text-left pl-4">studio</th>
-                <th className="text-center">rates</th>
-                <th className="text-right pr-0">time</th>
-                <th className="text-left"></th>
-              </tr>
-            </thead>
+          <table className="table table-auto w-full">
             <tbody>
               {slots.map((slot) => {
                 const { placeId, start, end, links, rates } = slot;
@@ -48,8 +41,8 @@ export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
                   rates &&
                   rates.length > 0 && (
                     <tr key={`${placeId + start + end}`}>
-                      <td className="w-full p-0 pl-4 md:min-w-[128px] md:p-2 md:w-auto">
-                        <div className="breadcrumbs p-0 md:py-2">
+                      <td className="p-4 pl-4 md:min-w-[128px] md:p-2 md:w-auto grid grid-cols-1">
+                        <div className="breadcrumbs p-0 flex gap-x-3">
                           <ul>
                             {parent.meta.shortName ? (
                               <li>{parent.meta.shortName}</li>
@@ -58,15 +51,16 @@ export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
                             ) : null}
                             <li>{place.name}</li>
                           </ul>
+                          <TimeRange start={slot.start} end={slot.end} />
+                          <RatesPopover rates={rates} />
+                        </div>
+                        <div>
+                          <div className="badge badge-ghost">
+                            {place.meta.floor?.type}
+                          </div>
                         </div>
                       </td>
-                      <td className="text-xs p-0 md:p-2 px-2 text-left">
-                        <RatesPopover rates={rates} />
-                      </td>
-                      <td className="text-xs p-0 md:p-2 md:min-w-[75px] text-right">
-                        <TimeRange start={slot.start} end={slot.end} />
-                      </td>
-                      <td className="w-full p-0 md:p-2 text-left md:text-left">
+                      <td className="p-0 md:p-2 text-left md:text-left">
                         {links.length > 0 && <SlotActionsPopover slot={slot} />}
                       </td>
                     </tr>

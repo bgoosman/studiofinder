@@ -26,10 +26,11 @@ export const WeekdayFilter = ({ label, weekday }: DayFilterProps) => {
             "btn btn-sm",
             "px-4 py-2",
             {
-              "btn-ghost": !checked,
+              "btn-outline": !checked,
               "btn-primary": checked,
             },
-            "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+            "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500",
+            "normal-case"
           )}
         >
           {label.slice(0, 1)}

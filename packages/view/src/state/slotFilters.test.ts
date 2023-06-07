@@ -54,7 +54,7 @@ it("slots respect the filters", () => {
   expect(
     pipe(
       slots,
-      A.every((slot) => weekdayFilter[new Date(slot.start).getDay() as Weekday])
+      A.every((slot) => weekdayFilter[String(new Date(slot.start).getDay()) as Weekday])
     )
   ).toBe(true);
 });

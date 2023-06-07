@@ -4,6 +4,8 @@ import {
   InformationCircleIcon,
   MapIcon,
 } from "@heroicons/react/24/outline";
+import { IconWood } from "@tabler/icons-react";
+
 import { DateTime } from "luxon";
 import { useEffect } from "react";
 import { themeChange } from "theme-change";
@@ -28,16 +30,16 @@ import { slotGroupsByDate } from "./state/slotsGroupedByDate";
 import { useTitleEntity } from "./state/title";
 
 import "./App.css";
+import { FloorMaterialFilter } from "./components/FloorMaterialFilter";
+import { Material } from "finder/src/types/Floor";
 
 export default function App() {
   const isInitializing = useInitializingEntity();
   const createdAt = useCreatedAt();
   const titleLower = useTitleEntity((state) => state.toLowerCase());
-  const _slotGroupsByDate = slotGroupsByDate.use();
   const _infiniteSlotGroups = infiniteSlotGroups.use();
   const _hasNextPage = hasNextPage.use();
   const _totalPageCount = totalPageCount.use();
-  const _page = page.use();
 
   useEffect(() => {
     // themeChange(false);
@@ -110,13 +112,22 @@ export default function App() {
               Find space to rent on these days:
             </h2>
             <div className="w-full space-x-1 mb-3">
-              <WeekdayFilter label="Sunday" weekday={0} />
-              <WeekdayFilter label="Monday" weekday={1} />
-              <WeekdayFilter label="Tuesday" weekday={2} />
-              <WeekdayFilter label="Wednesday" weekday={3} />
-              <WeekdayFilter label="Thursday" weekday={4} />
-              <WeekdayFilter label="Friday" weekday={5} />
-              <WeekdayFilter label="Saturday" weekday={6} />
+              <WeekdayFilter label="Sunday" weekday={"0"} />
+              <WeekdayFilter label="Monday" weekday={"1"} />
+              <WeekdayFilter label="Tuesday" weekday={"2"} />
+              <WeekdayFilter label="Wednesday" weekday={"3"} />
+              <WeekdayFilter label="Thursday" weekday={"4"} />
+              <WeekdayFilter label="Friday" weekday={"5"} />
+              <WeekdayFilter label="Saturday" weekday={"6"} />
+            </div>
+            <h2 className="mb-2 flex items-center">
+              <IconWood size={16} className="mr-1" />
+              With these floor types:
+            </h2>
+            <div className="w-full space-x-1 mb-3">
+              <FloorMaterialFilter label="Wood" material={Material.Wood} />
+              {/* There are no rooms with concrete yet <FloorMaterialFilter label="Concrete" material={Material.Concrete} /> */}
+              <FloorMaterialFilter label="Marley" material={Material.Marley} />
             </div>
             <h2 className="mb-2 flex items-center">
               <MapIcon className="h-4 w-4 mr-1" />
@@ -131,17 +142,20 @@ export default function App() {
             {_totalPageCount > 0 && (
               <>
                 {_infiniteSlotGroups.length > 0 &&
-                  _infiniteSlotGroups.map(([date, slots]) => (
-                    <SlotGroup
-                      key={date}
-                      slots={slots}
-                      title={DateTime.fromISO(date).toLocaleString({
-                        weekday: "short",
-                        month: "long",
-                        day: "2-digit",
-                      })}
-                    />
-                  ))}
+                  _infiniteSlotGroups.map(
+                    ([date, slots]) =>
+                      slots.length > 0 && (
+                        <SlotGroup
+                          key={date}
+                          slots={slots}
+                          title={DateTime.fromISO(date).toLocaleString({
+                            weekday: "short",
+                            month: "long",
+                            day: "2-digit",
+                          })}
+                        />
+                      )
+                  )}
                 <p className="p-4">
                   {_hasNextPage
                     ? "There are more slots. Keep scrolling!"
