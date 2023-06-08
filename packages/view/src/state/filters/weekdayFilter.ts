@@ -2,6 +2,7 @@ import { SlotFilter } from "./filters";
 
 export type Weekday = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7";
 export type WeekdayFilters = Record<Weekday, boolean>;
+export const weekdays: Weekday[] = ["0", "1", "2", "3", "4", "5", "6", "7"];
 
 export const weekdaysFilter: SlotFilter<WeekdayFilters> = {
   getDefault: () => ({

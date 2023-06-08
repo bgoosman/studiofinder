@@ -1,9 +1,8 @@
 import classNames from "classnames";
-import { PlacesFilter, setPlaceFilter } from "../state/filters/placeFilter";
+import { setPlaceFilter } from "../state/filters/placeFilter";
 import { setSlotFilter, useSlotFilter } from "../state/slotFilters";
-import { Switch } from "@headlessui/react";
-import { Fragment } from "react";
 import { ResolvedPlace } from "finder/src/types/Place";
+import ToggleButton from "./ToggleButton";
 
 export const clearHighlight = () => {
   document.querySelectorAll(".place-toggle-button").forEach((el) => {
@@ -47,50 +46,31 @@ export const highlightPath = (path: string[]) => {
 };
 
 export type PlaceFilterButtonProps = {
-  className?: string;
   place: ResolvedPlace;
 };
 
-export const PlaceFilterButton = ({ className, place }: PlaceFilterButtonProps) => {
+export const PlaceFilterButton = ({ place }: PlaceFilterButtonProps) => {
   const checked = useSlotFilter("place", (sf) => sf[place.id]!);
   return (
-    <Switch
-      as={Fragment}
+    <ToggleButton
       checked={checked}
-      onChange={(newChecked: boolean) =>
+      ariaLabel={place.name}
+      className={classNames("place-toggle-button")}
+      off={place.name}
+      on={place.name}
+      onClick={(newChecked: boolean) => {
         setSlotFilter("place", (placeFilter) =>
           setPlaceFilter(newChecked)(place.id)(placeFilter)
-        )
-      }
-    >
-      {({ checked }) => (
-        <button
-          {...{ [PATH_ID_ATTRIBUTE]: place.id }}
-          className={classNames(
-            className,
-            "btn",
-            "btn-xs md:btn-sm flex-nowrap",
-            {
-              "btn-outline": !checked,
-              "btn-primary": checked,
-            },
-            "focus:ring-2 focus:ring-offset-2 focus:ring-primary",
-            "place-toggle-button",
-            "normal-case"
-          )}
-          onClick={() => {
-            clearHighlight();
-          }}
-          onMouseOver={() => {
-            highlightPath(place.path);
-          }}
-          onMouseOut={() => {
-            clearHighlight();
-          }}
-        >
-          {place.name}
-        </button>
-      )}
-    </Switch>
+        );
+        clearHighlight();
+      }}
+      onMouseOver={() => {
+        highlightPath(place.path);
+      }}
+      onMouseOut={() => {
+        clearHighlight();
+      }}
+      pathId={place.id}
+    />
   );
 };

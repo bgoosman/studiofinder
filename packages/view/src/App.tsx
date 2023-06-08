@@ -4,34 +4,35 @@ import {
   InformationCircleIcon,
   MapIcon,
 } from "@heroicons/react/24/outline";
-import { IconWood } from "@tabler/icons-react";
+import { IconCirclePlus, IconWood } from "@tabler/icons-react";
 
 import { DateTime } from "luxon";
 import { useEffect } from "react";
-import { themeChange } from "theme-change";
 
 import { Logo } from "./components/Logo";
 import { PlaceFilterTree } from "./components/PlaceFilterTree";
 import { SlotGroup } from "./components/SlotGroup";
 import { Stats } from "./components/Stats";
-import { ThemePicker } from "./components/ThemePicker";
 import { WeekdayFilter } from "./components/WeekdayFilter";
 import { WhatIsThisPopover } from "./components/WhatIsThisPopover";
 import {
   getNextPage,
   hasNextPage,
   infiniteSlotGroups,
-  page,
   totalPageCount,
 } from "./state/infiniteSlotGroups";
 import { setIsInitializing, useInitializingEntity } from "./state/isInitializing";
 import { useCreatedAt } from "./state/places";
-import { slotGroupsByDate } from "./state/slotsGroupedByDate";
 import { useTitleEntity } from "./state/title";
 
 import "./App.css";
 import { FloorMaterialFilter } from "./components/FloorMaterialFilter";
-import { Material } from "finder/src/types/Floor";
+import { Material, materials } from "../../finder/src/types/Floor";
+import { setSlotFilter, useSlotFilter } from "./state/slotFilters";
+import { setWeekdayEnabled, weekdays } from "./state/filters/weekdayFilter";
+import { setFloorMaterialEnabled } from "./state/filters/floorMaterialFilter";
+import ToggleButton from "./components/ToggleButton";
+import AddRemoveButton from "./components/AddRemoveButton";
 
 export default function App() {
   const isInitializing = useInitializingEntity();
@@ -40,10 +41,8 @@ export default function App() {
   const _infiniteSlotGroups = infiniteSlotGroups.use();
   const _hasNextPage = hasNextPage.use();
   const _totalPageCount = totalPageCount.use();
-
-  useEffect(() => {
-    // themeChange(false);
-  }, []);
+  const weekdayFilter = useSlotFilter("weekday");
+  const floorMaterialFilter = useSlotFilter("floorMaterial");
 
   useEffect(() => {
     if (isInitializing) {
@@ -107,11 +106,20 @@ export default function App() {
             )}
           </section>
           <section aria-label="Filters" className="px-3">
-            <h2 className="mb-2 flex items-center">
-              <CalendarIcon className="h-4 w-4 mr-1" />
+            <h2 className="mb-2 flex items-center gap-x-1">
+              <CalendarIcon className="h-4 w-4" />
               Day
             </h2>
-            <div className="w-full space-x-1 mb-3">
+            <div className="space-x-1 mb-3 flex items-center">
+              <AddRemoveButton
+                ariaLabel="Select all weekdays"
+                checked={weekdays.every((weekday) => weekdayFilter[weekday])}
+                onClick={(checked) => {
+                  weekdays.forEach((weekday) => {
+                    setSlotFilter("weekday", setWeekdayEnabled(checked)(weekday));
+                  });
+                }}
+              />
               <WeekdayFilter label="Sunday" weekday={"0"} />
               <WeekdayFilter label="Monday" weekday={"1"} />
               <WeekdayFilter label="Tuesday" weekday={"2"} />
@@ -124,7 +132,19 @@ export default function App() {
               <IconWood size={16} className="mr-1" />
               Floor
             </h2>
-            <div className="w-full space-x-1 mb-3">
+            <div className="mb-3 flex items-center gap-x-1">
+              <AddRemoveButton
+                ariaLabel="Select all floor materials"
+                checked={materials.every((material) => floorMaterialFilter[material])}
+                onClick={(checked) => {
+                  materials.forEach((material) => {
+                    setSlotFilter(
+                      "floorMaterial",
+                      setFloorMaterialEnabled(checked)(material)
+                    );
+                  });
+                }}
+              />
               <FloorMaterialFilter label="Wood" material={Material.Wood} />
               {/* There are no rooms with concrete yet <FloorMaterialFilter label="Concrete" material={Material.Concrete} /> */}
               <FloorMaterialFilter label="Marley" material={Material.Marley} />
@@ -166,7 +186,7 @@ export default function App() {
           </section>
           <button
             aria-label="Back to top"
-            className="fixed hidden z-10 right-24 bottom-16 btn btn-primary btn-circle"
+            className="fixed hidden z-10 right-6 bottom-6 btn btn-primary btn-circle"
             id="scrollToTopBtn"
             onClick={() =>
               window.scrollTo({
