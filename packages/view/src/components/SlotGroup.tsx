@@ -17,7 +17,6 @@ function truncate(s: string, limit: number = 10) {
 }
 
 export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
-  console.log("SlotGroup", { title, slots });
   return (
     <div className={classNames("card card-compact rounded-none", className)}>
       <div className="card-body p-0 md:p-4 mt-2">

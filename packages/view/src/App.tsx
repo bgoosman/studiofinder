@@ -78,8 +78,6 @@ export default function App() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [_infiniteSlotGroups]);
 
-  console.log(materials.every((material) => floorMaterialFilter[material]));
-
   return (
     <div className="overflow-scroll flex flex-col" id="app-inner">
       <header className="navbar bg-base-100 flex-grow-0 p-3">

@@ -32,5 +32,4 @@ export const hasNextPage = derivedAny(
 
 export const getNextPage = () => {
   if (hasNextPage.get()) page.set(page.get() + 1);
-  console.log("getNextPage", page.get());
 };
