@@ -1,52 +1,58 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackPartialsPlugin = require('html-webpack-partials-plugin');
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackPartialsPlugin = require("html-webpack-partials-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = {
-  mode: 'production',
-  entry: './src/index.tsx',
+  mode: "production",
+  entry: "./src/index.tsx",
   output: {
-    filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: "[name].bundle.js",
+    path: path.resolve(__dirname, "dist"),
     clean: true, // alternative to rm -rf dist/*
   },
   module: {
     rules: [
-      { test: /\.css$/, use: ['style-loader', 'css-loader', 'postcss-loader'] },
-      { test: /\.tsx?$/, use: 'ts-loader' },
+      { test: /\.css$/, use: ["style-loader", "css-loader", "postcss-loader"] },
+      { test: /\.tsx?$/, loader: "ts-loader", options: { allowTsInNodeModules: true } },
       // https://webpack.js.org/guides/asset-management
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: 'asset/resource',
+        type: "asset/resource",
       },
     ],
   },
   plugins: [
     new CopyPlugin({
-      patterns: [
-        { from: "assets" },
-      ],
+      patterns: [{ from: "assets" }],
     }),
     new HtmlWebpackPlugin({
-      favicon: 'src/static/favicon/favicon.ico',
-      title: 'Studio Finder',
+      favicon: "src/static/favicon/favicon.ico",
+      title: "Studio Finder",
     }),
-    new HtmlWebpackPartialsPlugin([{
-      path: './src/html/goatcounter.html',
-      location: 'head'
-    }, {
-      path: './src/html/react-app-root.html'
-    }, {
-      path: './src/html/app-loader.html',
-    }])
+    new HtmlWebpackPartialsPlugin([
+      {
+        path: "./src/html/goatcounter.html",
+        location: "head",
+      },
+      {
+        path: "./src/html/react-app-root.html",
+      },
+      {
+        path: "./src/html/app-loader.html",
+      },
+    ]),
   ],
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: [".tsx", ".ts", ".js"],
     extensionAlias: {
-      '.ts': ['.js', '.ts'],
+      ".ts": [".js", ".ts"],
     },
-    plugins: [new TsconfigPathsPlugin({/* options: see below */ })]
+    plugins: [
+      new TsconfigPathsPlugin({
+        /* options: see below */
+      }),
+    ],
   },
 };

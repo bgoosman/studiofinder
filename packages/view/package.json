@@ -52,7 +52,7 @@
     "@tabler/icons-react": "^2.22.0",
     "classnames": "^2.3.2",
     "daisyui": "2.46.0",
-    "finder": "1.0.0",
+    "finder": "file:./../finder",
     "fp-ts": "^2.13.1",
     "fp-ts-std": "^0.15.1",
     "immer": "^9.0.16",
