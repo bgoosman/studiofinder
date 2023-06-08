@@ -5,7 +5,8 @@
   "scripts": {
     "slots": "mkdir -p slots/ && cp ../finder/dist/universe.json slots/universe.json",
     "build": "yarn run webpack --config webpack.prod.js",
-    "start": "yarn run webpack serve --open --config webpack.dev.js"
+    "start": "yarn run webpack serve --open --config webpack.dev.js",
+    "dev": "yarn run webpack serve --open --config webpack.dev.js"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
