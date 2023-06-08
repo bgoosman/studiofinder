@@ -131,7 +131,7 @@ export default function App() {
             </div>
             <h2 className="mb-2 flex items-center">
               <MapIcon className="h-4 w-4 mr-1" />
-              Location
+              Place
             </h2>
             <PlaceFilterTree className="mb-2" />
           </section>
