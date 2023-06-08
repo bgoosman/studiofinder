@@ -21,8 +21,12 @@ export const page = entity(0);
 
 export const infiniteSlotGroups = derivedAny(
   [page, slotGroupsByDate],
-  ([page, slotGroupsByDate]) =>
-    slotGroupsByDate.slice(0, page * pageSize + pageSize) as [string, ResolvedSlot[]][]
+  ([page, slotGroupsByDate]) => {
+    return slotGroupsByDate.slice(0, page * pageSize + pageSize) as [
+      string,
+      ResolvedSlot[]
+    ][];
+  }
 );
 
 export const hasNextPage = derivedAny(

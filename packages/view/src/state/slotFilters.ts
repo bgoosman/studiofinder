@@ -1,18 +1,15 @@
 import { ResolvedSlot } from "finder/src/types/Slot";
 import { DateTime } from "luxon";
 import { entity } from "simpler-state";
-import { A, flow, NEA, Ord } from "../fp/fp-exports";
+import { A, flow, NEA, Ord, pipe } from "../fp/fp-exports";
 import { floorMaterialFilter, FloorMaterialFilter } from "./filters/floorMaterialFilter";
 import { hourFilter, HourRange } from "./filters/hourFilter";
 import { placesFilter, PlacesFilter } from "./filters/placeFilter";
 import { Weekday, WeekdayFilters, weekdaysFilter } from "./filters/weekdayFilter";
 import { getPlaceById } from "./places";
 import { reaction } from "./simpler-state/reaction";
-import { ResolvedSlots, slotsEntity } from "./slots";
-import {
-  ResolvedSlotsGroupedByDate,
-  resolvedSlotsGroupedByDateEntity,
-} from "./slotsGroupedByDate";
+import { slotsEntity } from "./slots";
+import { resolvedSlotsGroupedByDateEntity } from "./slotsGroupedByDate";
 
 export type SlotFilters = {
   weekday: WeekdayFilters;
@@ -77,19 +74,6 @@ export const ordSlotStartDate: Ord<ResolvedSlot> = {
 const getSlotStartDateString = (slot: ResolvedSlot) =>
   DateTime.fromISO(slot.start).toISODate()!;
 
-const computeResolvedSlotsGroupedByDateWithFilters = (
-  options: SlotFilters
-): ((slots: ResolvedSlots) => ResolvedSlotsGroupedByDate) =>
-  flow(
-    A.filter(filterSlotsWithOptions(options)),
-    A.match(
-      // sort and groupBy require NonEmptyArray, so by using A.match, we skip calling them altogether if the array is empty.
-      // I used to sort here with NEA.sort(ordSlotStartDate), but it's not necessary, since the slots are already sorted by the API.
-      () => ({}),
-      NEA.groupBy(getSlotStartDateString)
-    )
-  );
-
 // Each filter API is defined in a separate file, in filters, but their state is merged here.
 const fromSessionStorage = sessionStorage.getItem("slotFilters");
 const initialSlotFilters = fromSessionStorage
@@ -103,7 +87,30 @@ const initialSlotFilters = fromSessionStorage
 const slotFilters = entity<SlotFilters>(initialSlotFilters, [
   reaction((filters: SlotFilters) => {
     resolvedSlotsGroupedByDateEntity.set(
-      computeResolvedSlotsGroupedByDateWithFilters(filters)(slotsEntity.get())
+      pipe(
+        slotsEntity.get(),
+        flow(
+          A.filter(filterSlotsWithOptions(filters)),
+          A.match(
+            // sort and groupBy require NonEmptyArray, so by using A.match, we skip calling them altogether if the array is empty.
+            // I used to sort here with NEA.sort(ordSlotStartDate), but it's not necessary, since the slots are already sorted by the API.
+            () => ({}),
+            NEA.groupBy(getSlotStartDateString)
+          ),
+          (slotsGroupedByDate) => {
+            // Sort each slot group
+            Object.entries(slotsGroupedByDate).forEach(([date, slots]) => {
+              slotsGroupedByDate[date] = slots.sort((a, b) => {
+                const startA = new Date(a.start).getTime();
+                const startB = new Date(b.start).getTime();
+                return startA > startB ? 1 : startA < startB ? -1 : 0;
+              });
+            });
+            console.log("slotsGroupedByDate", slotsGroupedByDate);
+            return slotsGroupedByDate;
+          }
+        )
+      )
     );
   }),
   reaction((filters: SlotFilters) => {

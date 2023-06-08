@@ -42,7 +42,7 @@ export default function ({
       }}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
-      data-pathId={pathId}
+      data-pathid={pathId}
     >
       {!checked && off}
       {checked && on}
