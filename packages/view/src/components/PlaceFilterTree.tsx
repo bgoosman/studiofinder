@@ -2,8 +2,10 @@ import classNames from "classnames";
 import { flatten, map, some, values } from "lodash";
 import { ResolvedPlace } from "finder/src/types/Place";
 import { usePlacesByParentPathByDepth } from "../state/places";
-import { useSlotFilter } from "../state/slotFilters";
+import { setSlotFilter, useSlotFilter } from "../state/slotFilters";
 import { PlaceFilterButton } from "./PlaceFilterButton";
+import { setPlaceFilter } from "../state/filters/placeFilter";
+import AddRemoveButton from "./AddRemoveButton";
 
 export type PlaceFilterTreeProps = {
   className?: string;
@@ -53,7 +55,18 @@ export const PlaceFilterTree = ({ className }: PlaceFilterTreeProps) => {
                             </ul>
                           </div>
                         )}
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap items-center gap-1">
+                          <AddRemoveButton
+                            ariaLabel="Select all places"
+                            checked={places.every(isEnabled)}
+                            onClick={(checked) => {
+                              places.forEach((place) => {
+                                setSlotFilter("place", (placeFilter) =>
+                                  setPlaceFilter(checked)(place.id)(placeFilter)
+                                );
+                              });
+                            }}
+                          />
                           {map(places, (place) => (
                             <PlaceFilterButton key={place.id} place={place} />
                           ))}

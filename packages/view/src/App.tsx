@@ -28,20 +28,11 @@ import { useTitleEntity } from "./state/title";
 import "./App.css";
 import { FloorMaterialFilter } from "./components/FloorMaterialFilter";
 import { Material, materials } from "../../finder/src/types/Floor";
-import { setSlotFilter } from "./state/slotFilters";
+import { setSlotFilter, useSlotFilter } from "./state/slotFilters";
 import { setWeekdayEnabled, weekdays } from "./state/filters/weekdayFilter";
 import { setFloorMaterialEnabled } from "./state/filters/floorMaterialFilter";
-
-function AllButton({onClick}: {onClick: () => void}) {
-  return (
-    <button
-      className="btn btn-xs btn-ghost px-1"
-      onClick={onClick}
-    >
-      <IconCirclePlus size={16} />
-    </button>
-  );
-}
+import ToggleButton from "./components/ToggleButton";
+import AddRemoveButton from "./components/AddRemoveButton";
 
 export default function App() {
   const isInitializing = useInitializingEntity();
@@ -50,6 +41,8 @@ export default function App() {
   const _infiniteSlotGroups = infiniteSlotGroups.use();
   const _hasNextPage = hasNextPage.use();
   const _totalPageCount = totalPageCount.use();
+  const weekdayFilter = useSlotFilter("weekday");
+  const floorMaterialFilter = useSlotFilter("floorMaterial");
 
   useEffect(() => {
     if (isInitializing) {
@@ -85,6 +78,8 @@ export default function App() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [_infiniteSlotGroups]);
 
+  console.log(materials.every((material) => floorMaterialFilter[material]));
+
   return (
     <div className="overflow-scroll flex flex-col" id="app-inner">
       <header className="navbar bg-base-100 flex-grow-0 p-3">
@@ -118,6 +113,15 @@ export default function App() {
               Day
             </h2>
             <div className="space-x-1 mb-3 flex items-center">
+              <AddRemoveButton
+                ariaLabel="Select all weekdays"
+                checked={weekdays.every((weekday) => weekdayFilter[weekday])}
+                onClick={(checked) => {
+                  weekdays.forEach((weekday) => {
+                    setSlotFilter("weekday", setWeekdayEnabled(checked)(weekday));
+                  });
+                }}
+              />
               <WeekdayFilter label="Sunday" weekday={"0"} />
               <WeekdayFilter label="Monday" weekday={"1"} />
               <WeekdayFilter label="Tuesday" weekday={"2"} />
@@ -125,25 +129,27 @@ export default function App() {
               <WeekdayFilter label="Thursday" weekday={"4"} />
               <WeekdayFilter label="Friday" weekday={"5"} />
               <WeekdayFilter label="Saturday" weekday={"6"} />
-              <AllButton onClick={() => {
-                weekdays.forEach(weekday => {
-                  setSlotFilter("weekday", setWeekdayEnabled(true)(weekday))
-                });
-              }} />
             </div>
             <h2 className="mb-2 flex items-center">
               <IconWood size={16} className="mr-1" />
               Floor
             </h2>
-            <div className="w-full space-x-1 mb-3">
+            <div className="mb-3 flex items-center gap-x-1">
+              <AddRemoveButton
+                ariaLabel="Select all floor materials"
+                checked={materials.every((material) => floorMaterialFilter[material])}
+                onClick={(checked) => {
+                  materials.forEach((material) => {
+                    setSlotFilter(
+                      "floorMaterial",
+                      setFloorMaterialEnabled(checked)(material)
+                    );
+                  });
+                }}
+              />
               <FloorMaterialFilter label="Wood" material={Material.Wood} />
               {/* There are no rooms with concrete yet <FloorMaterialFilter label="Concrete" material={Material.Concrete} /> */}
               <FloorMaterialFilter label="Marley" material={Material.Marley} />
-              <AllButton onClick={() => {
-                materials.forEach(material => {
-                  setSlotFilter("floorMaterial", setFloorMaterialEnabled(true)(material))
-                });
-              }} />
             </div>
             <h2 className="mb-2 flex items-center">
               <MapIcon className="h-4 w-4 mr-1" />
@@ -182,7 +188,7 @@ export default function App() {
           </section>
           <button
             aria-label="Back to top"
-            className="fixed hidden z-10 right-24 bottom-16 btn btn-primary btn-circle"
+            className="fixed hidden z-10 right-6 bottom-6 btn btn-primary btn-circle"
             id="scrollToTopBtn"
             onClick={() =>
               window.scrollTo({
