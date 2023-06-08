@@ -1,6 +1,5 @@
 {
   "name": "gibney",
-  "packageManager": "yarn@3.3.1",
   "scripts": {
     "start": "yarn run cypress run"
   },
