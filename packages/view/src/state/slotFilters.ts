@@ -74,6 +74,8 @@ export const ordSlotStartDate: Ord<ResolvedSlot> = {
 const getSlotStartDateString = (slot: ResolvedSlot) =>
   DateTime.fromISO(slot.start).toISODate()!;
 
+export const filteredSlots = entity<ResolvedSlot[]>([]);
+
 // Each filter API is defined in a separate file, in filters, but their state is merged here.
 const fromSessionStorage = sessionStorage.getItem("slotFilters");
 const initialSlotFilters = fromSessionStorage
@@ -86,6 +88,7 @@ const initialSlotFilters = fromSessionStorage
     };
 const slotFilters = entity<SlotFilters>(initialSlotFilters, [
   reaction((filters: SlotFilters) => {
+    filteredSlots.set(pipe(slotsEntity.get(), A.filter(filterSlotsWithOptions(filters))));
     resolvedSlotsGroupedByDateEntity.set(
       pipe(
         slotsEntity.get(),

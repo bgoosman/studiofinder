@@ -1,69 +1,26 @@
-import {
-  ArrowUpIcon,
-  CalendarIcon,
-  InformationCircleIcon,
-  MapIcon,
-} from "@heroicons/react/24/outline";
-import { IconCirclePlus, IconWood } from "@tabler/icons-react";
-
+import { Affix, Alert, Button, Drawer, Group, rem } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconAlertCircle, IconArrowUp, IconFilter } from "@tabler/icons-react";
 import { DateTime } from "luxon";
 import { useEffect } from "react";
 
 import { Logo } from "./components/Logo";
-import { PlaceFilterTree } from "./components/PlaceFilterTree";
-import { SlotGroup } from "./components/SlotGroup";
-import { Stats } from "./components/Stats";
-import { WeekdayFilter } from "./components/WeekdayFilter";
-import { WhatIsThisPopover } from "./components/WhatIsThisPopover";
-import {
-  getNextPage,
-  hasNextPage,
-  infiniteSlotGroups,
-  totalPageCount,
-} from "./state/infiniteSlotGroups";
 import { setIsInitializing, useInitializingEntity } from "./state/isInitializing";
 import { useCreatedAt } from "./state/places";
 import { useTitleEntity } from "./state/title";
+import SlotGroups from "./components/SlotGroups";
+import SlotFilters from "./components/SlotFilters";
 
 import "./App.css";
-import { FloorMaterialFilter } from "./components/FloorMaterialFilter";
-import { Material, materials } from "../../finder/src/types/Floor";
-import { setSlotFilter, useSlotFilter } from "./state/slotFilters";
-import { setWeekdayEnabled, weekdays } from "./state/filters/weekdayFilter";
-import { setFloorMaterialEnabled } from "./state/filters/floorMaterialFilter";
-import ToggleButton from "./components/ToggleButton";
-import AddRemoveButton from "./components/AddRemoveButton";
+import { getNextPage, infiniteSlotGroups } from "./state/infiniteSlotGroups";
 
 export default function App() {
+  const [filtersOpened, { open: openFilters, close: closeFilters }] =
+    useDisclosure(false);
   const isInitializing = useInitializingEntity();
   const createdAt = useCreatedAt();
   const titleLower = useTitleEntity((state) => state.toLowerCase());
   const _infiniteSlotGroups = infiniteSlotGroups.use();
-  const _hasNextPage = hasNextPage.use();
-  const _totalPageCount = totalPageCount.use();
-  const weekdayFilter = useSlotFilter("weekday");
-  const floorMaterialFilter = useSlotFilter("floorMaterial");
-
-  useEffect(() => {
-    if (isInitializing) {
-      setIsInitializing(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    document.addEventListener("scroll", () => {
-      const rootElement = document.documentElement;
-      const scrollToTopBtn = document.getElementById("scrollToTopBtn")!;
-      var scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
-      if (rootElement.scrollTop / scrollTotal > 0.01) {
-        // Show button
-        scrollToTopBtn.classList.remove("hidden");
-      } else {
-        // Hide button
-        scrollToTopBtn.classList.add("hidden");
-      }
-    });
-  }, []);
 
   const onScroll = () => {
     const scrollTop = document.documentElement.scrollTop;
@@ -73,130 +30,82 @@ export default function App() {
       getNextPage();
     }
   };
+
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, [_infiniteSlotGroups]);
 
+  useEffect(() => {
+    if (isInitializing) {
+      setIsInitializing(false);
+    }
+  }, []);
+
   return (
     <div className="overflow-scroll flex flex-col" id="app-inner">
-      <header className="navbar bg-base-100 flex-grow-0 p-3">
-        <div className="flex-1">
-          <Logo
-            className="h-10 mr-3"
-            onClick={() => {
-              window.location.reload();
-            }}
-          />
-          <h1 className="text-4xl pr-2">{titleLower}</h1>
-        </div>
-        <div className="flex-none flex gap-x-2 items-center">
-          {/* <ThemePicker /> */}
-          <WhatIsThisPopover className="z-20" />
-        </div>
+      <header className="flex items-center py-2">
+        <Logo
+          className="h-10 mx-3"
+          onClick={() => {
+            window.location.reload();
+          }}
+        />
+        <h1
+          style={{
+            fontSize: rem(30),
+            margin: 0,
+          }}
+        >
+          {titleLower}
+        </h1>
       </header>
       {!isInitializing && (
         <>
-          <section className="px-3">
-            {createdAt && (
-              <h2 className="mb-2 flex items-center">
-                <InformationCircleIcon className="h-4 w-4 mr-1" /> Last updated:{" "}
-                {DateTime.fromISO(createdAt).toLocaleString(DateTime.DATETIME_SHORT)}
-              </h2>
-            )}
+          {createdAt && (
+            <Alert icon={<IconAlertCircle size="1rem" />}>
+              Last updated:{" "}
+              {DateTime.fromISO(createdAt).toLocaleString(DateTime.DATETIME_SHORT)}
+            </Alert>
+          )}
+          <div className="p-4">
+            <SlotFilters />
+          </div>
+          <Drawer opened={filtersOpened} onClose={closeFilters} title="Filters">
+            <SlotFilters />
+          </Drawer>
+          <section aria-label="Available space to rent" className="pt-3">
+            <SlotGroups />
           </section>
-          <section aria-label="Filters" className="px-3">
-            <h2 className="mb-2 flex items-center gap-x-1">
-              <CalendarIcon className="h-4 w-4" />
-              Day
-            </h2>
-            <div className="space-x-1 mb-3 flex items-center">
-              <AddRemoveButton
-                ariaLabel="Select all weekdays"
-                checked={weekdays.every((weekday) => weekdayFilter[weekday])}
-                onClick={(checked) => {
-                  weekdays.forEach((weekday) => {
-                    setSlotFilter("weekday", setWeekdayEnabled(checked)(weekday));
-                  });
-                }}
-              />
-              <WeekdayFilter label="Sunday" weekday={"0"} />
-              <WeekdayFilter label="Monday" weekday={"1"} />
-              <WeekdayFilter label="Tuesday" weekday={"2"} />
-              <WeekdayFilter label="Wednesday" weekday={"3"} />
-              <WeekdayFilter label="Thursday" weekday={"4"} />
-              <WeekdayFilter label="Friday" weekday={"5"} />
-              <WeekdayFilter label="Saturday" weekday={"6"} />
-            </div>
-            <h2 className="mb-2 flex items-center">
-              <IconWood size={16} className="mr-1" />
-              Floor
-            </h2>
-            <div className="mb-3 flex items-center gap-x-1">
-              <AddRemoveButton
-                ariaLabel="Select all floor materials"
-                checked={materials.every((material) => floorMaterialFilter[material])}
-                onClick={(checked) => {
-                  materials.forEach((material) => {
-                    setSlotFilter(
-                      "floorMaterial",
-                      setFloorMaterialEnabled(checked)(material)
-                    );
-                  });
-                }}
-              />
-              <FloorMaterialFilter label="Wood" material={Material.Wood} />
-              {/* There are no rooms with concrete yet <FloorMaterialFilter label="Concrete" material={Material.Concrete} /> */}
-              <FloorMaterialFilter label="Marley" material={Material.Marley} />
-            </div>
-            <h2 className="mb-2 flex items-center">
-              <MapIcon className="h-4 w-4 mr-1" />
-              Place
-            </h2>
-            <PlaceFilterTree className="mb-2" />
-          </section>
-          <section aria-label="Result stats" className="p-4">
-            <Stats />
-          </section>
-          <section aria-label="Available space to rent">
-            {_totalPageCount > 0 && (
-              <>
-                {_infiniteSlotGroups.length > 0 &&
-                  _infiniteSlotGroups.map(
-                    ([date, slots]) =>
-                      slots.length > 0 && (
-                        <SlotGroup
-                          key={date}
-                          slots={slots}
-                          title={DateTime.fromISO(date).toLocaleString({
-                            weekday: "short",
-                            month: "long",
-                            day: "2-digit",
-                          })}
-                        />
-                      )
-                  )}
-                <p className="p-4">
-                  {_hasNextPage
-                    ? "There are more slots. Keep scrolling!"
-                    : "That's all for now! Try different filters."}
-                </p>
-              </>
-            )}
-          </section>
-          <button
-            aria-label="Back to top"
-            className="fixed hidden z-10 right-6 bottom-6 btn btn-primary btn-circle"
-            id="scrollToTopBtn"
-            onClick={() =>
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-              })
-            }
+          <Affix
+            position={{ bottom: rem(30), left: "50%" }}
+            style={{ transform: "translateX(-50%)" }}
           >
-            <ArrowUpIcon className="h-8 w-8" />
-          </button>
+            <Group>
+              <Button.Group>
+                <Button
+                  aria-label="Open filters"
+                  leftIcon={<IconFilter size="1rem" />}
+                  onClick={() => openFilters()}
+                >
+                  Filters
+                </Button>
+                <Button
+                  aria-label="Back to top"
+                  id="scrollToTopBtn"
+                  leftIcon={<IconArrowUp size="1rem" />}
+                  onClick={() =>
+                    window.scrollTo({
+                      top: 0,
+                      behavior: "smooth",
+                    })
+                  }
+                >
+                  Scroll up
+                </Button>
+              </Button.Group>
+            </Group>
+          </Affix>
           {isInitializing && (
             <Logo className="animate-pulse absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-48" />
           )}

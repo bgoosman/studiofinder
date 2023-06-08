@@ -23,9 +23,3 @@ body,
     opacity: 1;
   }
 }
-
-@layer components {
-  .sf-popover {
-    @apply p-2 shadow-md shadow-primary bg-base-100 rounded-lg w-60 border border-primary;
-  }
-}

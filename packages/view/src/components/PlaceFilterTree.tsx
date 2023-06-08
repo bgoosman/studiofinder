@@ -45,20 +45,18 @@ export const PlaceFilterTree = ({ className }: PlaceFilterTreeProps) => {
                     );
                   return (
                     isThisGroupVisible && (
-                      <div className="" key={parentPath}>
+                      <div key={parentPath}>
                         {pathUpToThisDepth.length >= 2 && (
-                          <div className="pr-2 pl-2 pb-1 text-sm breadcrumbs">
-                            <ul>
-                              {[pathUpToThisDepth.at(-1)].map((part) => (
-                                <li key={part}>{part}</li>
-                              ))}
-                            </ul>
+                          <div className="px-0 py-2 text-sm">
+                            {pathUpToThisDepth.at(-1)}
                           </div>
                         )}
                         <div className="flex flex-wrap items-center gap-1">
                           <AddRemoveButton
                             ariaLabel="Select all places"
                             checked={places.every(isEnabled)}
+                            className="place-toggle-button"
+                            pathId={places[0].id}
                             onClick={(checked) => {
                               places.forEach((place) => {
                                 setSlotFilter("place", (placeFilter) =>

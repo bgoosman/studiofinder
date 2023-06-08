@@ -1,3 +1,4 @@
+import { Badge, Breadcrumbs } from "@mantine/core";
 import classNames from "classnames";
 import { memo } from "react";
 import { ResolvedSlot } from "finder/src/types/Slot";
@@ -18,58 +19,50 @@ function truncate(s: string, limit: number = 10) {
 
 export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
   return (
-    <div className={classNames("card card-compact rounded-none", className)}>
-      <div className="card-body p-0 md:p-4 mt-2">
-        <div className="card-title">
-          <h2 className="text-xl px-4" data-testid="datetime">
-            {title}
-          </h2>
-        </div>
-        <div className="overflow-x-hidden divide-y">
-          {slots.map((slot) => {
-            const { placeId, start, end, links, rates } = slot;
-            const place = getPlaceById(placeId)!;
-            if (!place) {
-              console.error(`Place with id ${placeId} not found`);
-            }
+    <div className="mt-3">
+      <h2 className="px-3 m-0" data-testid="datetime">
+        {title}
+      </h2>
+      {slots.map((slot) => {
+        const { placeId, start, end, links, rates } = slot;
+        const place = getPlaceById(placeId)!;
+        if (!place) {
+          console.error(`Place with id ${placeId} not found`);
+        }
 
-            const parent = getPlaceById(place.path.slice(0, -1).join(">"))!;
-            if (!parent) {
-              console.error(`Parent of place with id ${placeId} not found`);
-            }
+        const parent = getPlaceById(place.path.slice(0, -1).join(">"))!;
+        if (!parent) {
+          console.error(`Parent of place with id ${placeId} not found`);
+        }
 
-            return (
-              rates &&
-              rates.length > 0 && (
-                <div key={`${placeId + start + end}`} className="flex items-center">
-                  <div className="flex-grow p-4 pl-4 md:min-w-[128px] md:p-2 md:w-auto grid grid-cols-1 gap-x-3">
-                    <div className="flex items-center gap-x-3">
-                      <div className="breadcrumbs">
-                        <ul>
-                          {parent.meta.shortName ? (
-                            <li>{parent.meta.shortName}</li>
-                          ) : parent.name != place.name ? (
-                            <li>{parent.name}</li>
-                          ) : null}
-                          <li>{truncate(place.name, 20)}</li>
-                        </ul>
-                      </div>
-                      <TimeRange start={slot.start} end={slot.end} />
-                    </div>
-                    <div className="flex gap-x-3">
-                      <RatesPopover rates={rates} />
-                      <div className="badge badge-ghost">{place.meta.floor?.type}</div>
-                    </div>
-                  </div>
-                  <div className="flex-shrink p-0 md:p-2 text-left md:text-left">
-                    {links.length > 0 && <SlotActionsPopover slot={slot} />}
-                  </div>
+        return (
+          rates &&
+          rates.length > 0 && (
+            <div key={`${placeId + start + end}`} className="flex items-center px-4">
+              <div className="flex-grow p-4 pl-0 md:min-w-[128px] md:p-2 md:w-auto grid grid-cols-1 gap-x-3 gap-y-2">
+                <div className="flex items-center gap-x-3">
+                  <Breadcrumbs separator=">">
+                    {parent.meta.shortName ? (
+                      <span>{parent.meta.shortName}</span>
+                    ) : parent.name != place.name ? (
+                      <span>{parent.name}</span>
+                    ) : null}
+                    <span>{truncate(place.name, 20)}</span>
+                  </Breadcrumbs>
+                  <TimeRange start={slot.start} end={slot.end} />
                 </div>
-              )
-            );
-          })}
-        </div>
-      </div>
+                <div className="flex items-center gap-x-1">
+                  <RatesPopover rates={rates} />
+                  <Badge variant="outline">{place.meta.floor?.type}</Badge>
+                </div>
+              </div>
+              <div className="flex-shrink p-0 md:p-2 text-left md:text-left">
+                {links.length > 0 && <SlotActionsPopover slot={slot} />}
+              </div>
+            </div>
+          )
+        );
+      })}
     </div>
   );
 });

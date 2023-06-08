@@ -1,6 +1,4 @@
-import { QuestionMarkCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import * as Popover from "@radix-ui/react-popover";
-import classNames from "classnames";
+import { Badge, Button, Popover } from "@mantine/core";
 import { DiscountedRentalRate, RentalRate } from "finder/src/types/RentalRate";
 import { Discount } from "finder/src/types/Discount";
 import { CompositeRentalType } from "finder/src/types/RentalType";
@@ -21,13 +19,13 @@ const CompositeRentalTypeBadge = ({
   compositeType,
 }: {
   compositeType: CompositeRentalType;
-}) => <span className="badge">{CompositeRentalType.toString(compositeType)}</span>;
+}) => <Badge>{CompositeRentalType.toString(compositeType)}</Badge>;
 
 const Rate = ({ rate }: { rate: RentalRate | DiscountedRentalRate }) => {
   const { types } = rate;
   return (
-    <section className="mb-4">
-      <h2 className="font-bold">${rate.rate}</h2>
+    <div className="mb-4">
+      {rate.rate}
       <RateText rate={DiscountedRentalRate.isDiscounted(rate) ? rate.discount : rate} />
       {types && (
         <div className="flex flex-wrap gap-1">
@@ -39,7 +37,7 @@ const Rate = ({ rate }: { rate: RentalRate | DiscountedRentalRate }) => {
           ))}
         </div>
       )}
-    </section>
+    </div>
   );
 };
 
@@ -51,28 +49,17 @@ export function RatesPopover({
   rates: RentalRate[];
 }) {
   return (
-    <Popover.Root>
-      <Popover.Trigger className={"btn btn-xs btn-ghost px-0"}>
-        <span className="mr-0">
+    <Popover width={200} position="bottom" withArrow shadow="md">
+      <Popover.Target>
+        <Badge variant="outline">
           {rates && rates.length > 0 ? ` \$${rates[0]?.rate}/hr` : ``}
-        </span>{" "}
-        <QuestionMarkCircleIcon className="h-4 w-4" />
-      </Popover.Trigger>
-      <Popover.Portal>
-        <Popover.Content
-          align="center"
-          sideOffset={5}
-          className={classNames("sf-popover p-3", className)}
-        >
-          {rates.map((r, i) => (
-            <Rate key={i} rate={r} />
-          ))}
-          <Popover.Close className="absolute top-5 right-8">
-            <XMarkIcon className="h-5 w-5"></XMarkIcon>
-          </Popover.Close>
-          <Popover.Arrow className="" />
-        </Popover.Content>
-      </Popover.Portal>
-    </Popover.Root>
+        </Badge>
+      </Popover.Target>
+      <Popover.Dropdown>
+        {rates.map((r, i) => (
+          <Rate key={i} rate={r} />
+        ))}
+      </Popover.Dropdown>
+    </Popover>
   );
 }

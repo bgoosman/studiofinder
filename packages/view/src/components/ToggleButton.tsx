@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { Button } from "@mantine/core";
 
 export type ToggleButtonProps = {
   ariaLabel: string;
@@ -24,28 +24,18 @@ export default function ({
   pathId,
 }: ToggleButtonProps) {
   return (
-    <button
+    <Button
       aria-label={ariaLabel}
-      className={classNames(
-        "btn btn-sm flex-nowrap",
-        "p-2",
-        {
-          "btn-outline": !checked,
-          "btn-primary": checked,
-        },
-        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500",
-        "normal-case",
-        className
-      )}
-      onClick={() => {
-        onClick(!checked);
-      }}
+      className={className}
+      compact
+      data-pathid={pathId}
+      onClick={() => onClick(!checked)}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
-      data-pathid={pathId}
+      variant={checked ? "filled" : "outline"}
     >
       {!checked && off}
       {checked && on}
-    </button>
+    </Button>
   );
 }
