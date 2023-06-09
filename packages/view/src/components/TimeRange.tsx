@@ -17,7 +17,7 @@ export const TimeRange = ({
   const endMinute = DateTime.fromISO(end).setZone("local").minute;
   const endMeridiem = endHour < 12 ? "a" : "p";
   return (
-    <div className={classNames("flex flex-wrap content-center", className)}>
+    <span className={classNames("flex flex-wrap content-center", className)}>
       {"("}
       {startHour % 12 === 0 ? 12 : startHour % 12}
       {startMinute > 0 ? `:${startMinute}` : ``}
@@ -25,6 +25,6 @@ export const TimeRange = ({
       {endMinute > 0 ? `:${endMinute}` : ``}
       {endMeridiem}
       {")"}
-    </div>
+    </span>
   );
 };

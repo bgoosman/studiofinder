@@ -32,7 +32,7 @@ export default function () {
               />
             )
         )}
-      <p className="p-4">
+      <p className="p-4" id="pageBottom">
         {_hasNextPage
           ? "There are more slots. Keep scrolling!"
           : "That's all for now! Try different filters."}
