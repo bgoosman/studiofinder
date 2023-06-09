@@ -8,11 +8,10 @@ import { Logo } from "./components/Logo";
 import { setIsInitializing, useInitializingEntity } from "./state/isInitializing";
 import { useCreatedAt } from "./state/places";
 import { useTitleEntity } from "./state/title";
-import SlotGroups from "./components/SlotGroups";
+import InfiniteSlotGroups from "./components/InfiniteSlotGroups";
 import SlotFilters from "./components/SlotFilters";
 
 import "./App.css";
-import { getNextPage, infiniteSlotGroups } from "./state/infiniteSlotGroups";
 
 export default function App() {
   const [filtersOpened, { open: openFilters, close: closeFilters }] =
@@ -20,21 +19,6 @@ export default function App() {
   const isInitializing = useInitializingEntity();
   const createdAt = useCreatedAt();
   const titleLower = useTitleEntity((state) => state.toLowerCase());
-  const _infiniteSlotGroups = infiniteSlotGroups.use();
-
-  const onScroll = () => {
-    const scrollTop = document.documentElement.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight;
-    const clientHeight = document.documentElement.clientHeight;
-    if (scrollTop + clientHeight >= scrollHeight - 5) {
-      getNextPage();
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [_infiniteSlotGroups]);
 
   useEffect(() => {
     if (isInitializing) {
@@ -68,15 +52,13 @@ export default function App() {
               {DateTime.fromISO(createdAt).toLocaleString(DateTime.DATETIME_SHORT)}
             </Alert>
           )}
-          <div className="p-4">
-            <SlotFilters />
+          <div className="md:flex md:flex-row">
+            <SlotFilters className="md:w-[350px] p-4" />
+            <InfiniteSlotGroups className="p-4" />
           </div>
           <Drawer opened={filtersOpened} onClose={closeFilters} title="Filters">
             <SlotFilters />
           </Drawer>
-          <section aria-label="Available space to rent" className="pt-3">
-            <SlotGroups />
-          </section>
           <Affix
             position={{ bottom: rem(30), left: "50%" }}
             style={{ transform: "translateX(-50%)" }}

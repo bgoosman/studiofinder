@@ -8,13 +8,19 @@ import { FloorMaterialFilter } from "./FloorMaterialFilter";
 import { PlaceFilterTree } from "./PlaceFilterTree";
 import { WeekdayFilter } from "./WeekdayFilter";
 import { Stats } from "./Stats";
+import classNames from "classnames";
 
-export default function () {
+type Props = {
+  className?: string;
+  style?: React.CSSProperties;
+};
+
+export default function ({ className, style }: Props) {
   const weekdayFilter = useSlotFilter("weekday");
   const floorMaterialFilter = useSlotFilter("floorMaterial");
 
   return (
-    <>
+    <div style={style} className={classNames(className)}>
       <p className="my-2 flex items-center gap-x-1">
         <IconCalendar size="1rem" /> Days
       </p>
@@ -58,6 +64,6 @@ export default function () {
       </p>
       <PlaceFilterTree className="mb-2" />
       <Stats />
-    </>
+    </div>
   );
 }
