@@ -47,9 +47,9 @@ export const PlaceFilterTree = ({ className }: PlaceFilterTreeProps) => {
                     isThisGroupVisible && (
                       <div key={parentPath}>
                         {pathUpToThisDepth.length >= 2 && (
-                          <div className="px-0 py-2 text-sm">
+                          <h4 className="px-0 py-2 text-sm">
                             {pathUpToThisDepth.at(-1)}
-                          </div>
+                          </h4>
                         )}
                         <div className="flex flex-wrap items-center gap-1">
                           <AddRemoveButton

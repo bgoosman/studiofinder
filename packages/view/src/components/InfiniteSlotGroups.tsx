@@ -8,6 +8,7 @@ import {
 import { SlotGroup } from "./SlotGroup";
 import { Button } from "@mantine/core";
 import { useEffect } from "react";
+import { Stats } from "./Stats";
 
 type Props = {
   className?: string;
@@ -32,12 +33,9 @@ export default function ({ className }: Props) {
     return () => window.removeEventListener("scroll", onScroll);
   }, [_infiniteSlotGroups]);
 
-  if (_totalPageCount === 0) {
-    return null;
-  }
-
   return (
     <div className={className}>
+      <Stats className={'mb-3'} />
       {_infiniteSlotGroups.length > 0 &&
         _infiniteSlotGroups.map(
           ([date, slots]) =>

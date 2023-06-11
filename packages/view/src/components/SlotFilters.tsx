@@ -7,7 +7,6 @@ import { setFloorMaterialEnabled } from "../state/filters/floorMaterialFilter";
 import { FloorMaterialFilter } from "./FloorMaterialFilter";
 import { PlaceFilterTree } from "./PlaceFilterTree";
 import { WeekdayFilter } from "./WeekdayFilter";
-import { Stats } from "./Stats";
 import classNames from "classnames";
 
 type Props = {
@@ -21,9 +20,10 @@ export default function ({ className, style }: Props) {
 
   return (
     <div style={style} className={classNames(className)}>
-      <p className="my-2 flex items-center gap-x-1">
-        <IconCalendar size="1rem" /> Days
-      </p>
+      <h2>Filter by</h2>
+      <h3 className="my-2 flex items-center gap-x-1">
+        <IconCalendar size="1rem" /> Weekday
+      </h3>
       <div className="space-x-1 mb-3 flex items-center">
         <AddRemoveButton
           ariaLabel="Select all weekdays"
@@ -42,9 +42,9 @@ export default function ({ className, style }: Props) {
         <WeekdayFilter label="Friday" weekday={"5"} />
         <WeekdayFilter label="Saturday" weekday={"6"} />
       </div>
-      <p className="mb-2 flex items-center gap-x-1">
-        <IconWood size="1rem" /> Floor
-      </p>
+      <h3 className="mb-2 flex items-center gap-x-1">
+        <IconWood size="1rem" /> Floor type
+      </h3>
       <div className="mb-3 flex items-center gap-x-1">
         <AddRemoveButton
           ariaLabel="Select all floor materials"
@@ -59,11 +59,10 @@ export default function ({ className, style }: Props) {
         {/* There are no rooms with concrete yet <FloorMaterialFilter label="Concrete" material={Material.Concrete} /> */}
         <FloorMaterialFilter label="Marley" material={Material.Marley} />
       </div>
-      <p className="mb-2 flex items-center gap-x-1">
-        <IconMap size="1rem" /> Place
-      </p>
+      <h3 className="mb-2 flex items-center gap-x-1">
+        <IconMap size="1rem" /> Location
+      </h3>
       <PlaceFilterTree className="mb-2" />
-      <Stats />
     </div>
   );
 }

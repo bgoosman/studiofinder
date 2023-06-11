@@ -19,7 +19,7 @@ function truncate(s: string, limit: number = 10) {
 
 export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
   return (
-    <div className="mt-3">
+    <div className="mb-3">
       <h2 className="m-0" data-testid="datetime">
         {title}
       </h2>

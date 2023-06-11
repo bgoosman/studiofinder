@@ -1,4 +1,4 @@
-import { CalendarDaysIcon, MapPinIcon } from "@heroicons/react/24/outline";
+import {Card, Text} from '@mantine/core'
 import { DateTime } from "luxon";
 
 import { placesById } from "../state/places";
@@ -6,7 +6,11 @@ import { useSlotFilter } from "../state/slotFilters";
 import { slotsEntity } from "../state/slots";
 import { slotGroupsByDate } from "../state/slotsGroupedByDate";
 
-export function Stats() {
+type Props = {
+  className?: string;
+}
+
+export function Stats({className}: Props) {
   const slots = slotsEntity.use();
   const _placesById = placesById.use();
   const _slotGroupsByDate = slotGroupsByDate.use();
@@ -30,9 +34,20 @@ export function Stats() {
   const enabledRentablePlaces = rentablePlaces.filter((place) => placesFilter[place.id]);
 
   return (
-    <div className="mt-3">
+    <Card
+    withBorder
+    radius="md"
+    padding="xl"
+    sx={(theme) => ({
+      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+    })}
+  >
+    <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
+    </Text>
+    <Text fz="lg" fw={500}>
       Showing {totalFilteredSlots} / {slots.length} slots
       {totalSlotsDateRange && ` from ${totalSlotsDateRange}`}
-    </div>
+    </Text>
+  </Card>
   );
 }
