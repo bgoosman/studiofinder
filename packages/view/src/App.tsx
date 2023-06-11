@@ -1,6 +1,20 @@
-import { Affix, Alert, Button, Drawer, Group, rem } from "@mantine/core";
+import {
+  ActionIcon,
+  Affix,
+  Alert,
+  Anchor,
+  Button,
+  Drawer,
+  Group,
+  rem,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconAlertCircle, IconArrowUp, IconFilter } from "@tabler/icons-react";
+import {
+  IconAlertCircle,
+  IconArrowUp,
+  IconBrandGithubFilled,
+  IconFilter,
+} from "@tabler/icons-react";
 import { DateTime } from "luxon";
 import { useEffect } from "react";
 
@@ -29,7 +43,7 @@ export default function App() {
 
   return (
     <div className="overflow-scroll flex flex-col" id="app-inner">
-      <header className="flex items-center py-2 gap-x-3 px-3">
+      <header className="flex items-center py-2 gap-x-2 px-3">
         <Logo
           className="h-10"
           onClick={() => {
@@ -40,11 +54,17 @@ export default function App() {
           style={{
             fontSize: rem(30),
             margin: 0,
+            marginRight: rem(10),
           }}
         >
           {titleLower}
         </h1>
         <WhatIsThisPopover />
+        <Anchor href="https://github.com/bgoosman/studiofinder" target="_blank">
+          <ActionIcon variant="subtle" radius="xl" size="sm">
+            <IconBrandGithubFilled size="2rem" />
+          </ActionIcon>
+        </Anchor>
       </header>
       {!isInitializing && (
         <>

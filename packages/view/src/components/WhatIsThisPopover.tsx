@@ -1,5 +1,5 @@
 import { ActionIcon, Button, HoverCard, Popover } from "@mantine/core";
-import { IconQuestionMark } from "@tabler/icons-react";
+import { IconInfoCircleFilled, IconQuestionMark } from "@tabler/icons-react";
 import classNames from "classnames";
 
 export function WhatIsThisPopover({ className }: { className?: string }) {
@@ -13,7 +13,7 @@ export function WhatIsThisPopover({ className }: { className?: string }) {
     <HoverCard width={450}>
       <HoverCard.Target>
         <ActionIcon variant="subtle" radius="xl" size="sm">
-          <IconQuestionMark size={"2rem"} />
+          <IconInfoCircleFilled size={"2rem"} />
         </ActionIcon>
       </HoverCard.Target>
       <HoverCard.Dropdown>
