@@ -51,7 +51,14 @@ export function RatesPopover({
   return (
     <Popover width={200} position="bottom" withArrow shadow="md">
       <Popover.Target>
-        <Badge variant="outline">
+        <Badge
+          variant="outline"
+          radius="xl"
+          size="sm"
+          style={{
+            cursor: "pointer",
+          }}
+        >
           {rates && rates.length > 0 ? ` \$${rates[0]?.rate}/hr` : ``}
         </Badge>
       </Popover.Target>

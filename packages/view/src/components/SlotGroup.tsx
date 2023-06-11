@@ -52,9 +52,11 @@ export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
                       <TimeRange start={slot.start} end={slot.end} />
                     </Breadcrumbs>
                   </div>
-                  <div className="flex gap-x-1">
+                  <div className="flex gap-x-1 items-center">
                     <RatesPopover rates={rates} />
-                    <Badge variant="outline">{place.meta.floor?.type}</Badge>
+                    <Badge variant="outline" size="sm">
+                      {place.meta.floor?.type}
+                    </Badge>
                     {links.length > 0 && <SlotActionsPopover slot={slot} />}
                   </div>
                 </div>
