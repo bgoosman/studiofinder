@@ -12,6 +12,7 @@ import InfiniteSlotGroups from "./components/InfiniteSlotGroups";
 import SlotFilters from "./components/SlotFilters";
 
 import "./App.css";
+import { WhatIsThisPopover } from "./components/WhatIsThisPopover";
 
 export default function App() {
   const [filtersOpened, { open: openFilters, close: closeFilters }] =
@@ -28,9 +29,9 @@ export default function App() {
 
   return (
     <div className="overflow-scroll flex flex-col" id="app-inner">
-      <header className="flex items-center py-2">
+      <header className="flex items-center py-2 gap-x-3 px-3">
         <Logo
-          className="h-10 mx-3"
+          className="h-10"
           onClick={() => {
             window.location.reload();
           }}
@@ -43,6 +44,7 @@ export default function App() {
         >
           {titleLower}
         </h1>
+        <WhatIsThisPopover />
       </header>
       {!isInitializing && (
         <>
