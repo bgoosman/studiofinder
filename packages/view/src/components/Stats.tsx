@@ -1,4 +1,4 @@
-import {Card, Text} from '@mantine/core'
+import { Card, Text } from "@mantine/core";
 import { DateTime } from "luxon";
 
 import { placesById } from "../state/places";
@@ -8,9 +8,9 @@ import { slotGroupsByDate } from "../state/slotsGroupedByDate";
 
 type Props = {
   className?: string;
-}
+};
 
-export function Stats({className}: Props) {
+export function Stats({ className }: Props) {
   const slots = slotsEntity.use();
   const _placesById = placesById.use();
   const _slotGroupsByDate = slotGroupsByDate.use();
@@ -35,19 +35,20 @@ export function Stats({className}: Props) {
 
   return (
     <Card
-    withBorder
-    radius="md"
-    padding="xl"
-    sx={(theme) => ({
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-    })}
-  >
-    <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
-    </Text>
-    <Text fz="lg" fw={500}>
-      Showing {totalFilteredSlots} / {slots.length} slots
-      {totalSlotsDateRange && ` from ${totalSlotsDateRange}`}
-    </Text>
-  </Card>
+      className={className}
+      withBorder
+      radius="md"
+      padding="xl"
+      sx={(theme) => ({
+        backgroundColor:
+          theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+      })}
+    >
+      <Text fz="xs" tt="uppercase" fw={700} c="dimmed"></Text>
+      <Text fz="lg" fw={500}>
+        Showing {totalFilteredSlots} / {slots.length} slots
+        {totalSlotsDateRange && ` from ${totalSlotsDateRange}`}
+      </Text>
+    </Card>
   );
 }

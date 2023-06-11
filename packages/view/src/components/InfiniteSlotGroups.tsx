@@ -35,7 +35,6 @@ export default function ({ className }: Props) {
 
   return (
     <div className={className}>
-      <Stats className={'mb-3'} />
       {_infiniteSlotGroups.length > 0 &&
         _infiniteSlotGroups.map(
           ([date, slots]) =>

@@ -40,19 +40,23 @@ export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
           rates.length > 0 && (
             <div key={`${placeId + start + end}`} className="flex items-center">
               <div className="flex-grow py-2 pl-0 gap-x-3 gap-y-2">
-                <div className="flex items-center gap-x-3">
-                  <Breadcrumbs separator=">">
-                    {parent.meta.shortName ? (
-                      <span>{parent.meta.shortName}</span>
-                    ) : parent.name != place.name ? (
-                      <span>{parent.name}</span>
-                    ) : null}
-                    <span>{truncate(place.name, 20)}</span>
-                  </Breadcrumbs>
-                  <TimeRange start={slot.start} end={slot.end} />
-                  <RatesPopover rates={rates} />
-                  <Badge variant="outline">{place.meta.floor?.type}</Badge>
-                  {links.length > 0 && <SlotActionsPopover slot={slot} />}
+                <div className="flex-col gap-x-3 gap-y-3 inline-flex">
+                  <div className="flex gap-x-1">
+                    <Breadcrumbs separator=">">
+                      {parent.meta.shortName ? (
+                        <span>{parent.meta.shortName}</span>
+                      ) : parent.name != place.name ? (
+                        <span>{parent.name}</span>
+                      ) : null}
+                      <span>{truncate(place.name, 20)}</span>
+                      <TimeRange start={slot.start} end={slot.end} />
+                    </Breadcrumbs>
+                  </div>
+                  <div className="flex gap-x-1">
+                    <RatesPopover rates={rates} />
+                    <Badge variant="outline">{place.meta.floor?.type}</Badge>
+                    {links.length > 0 && <SlotActionsPopover slot={slot} />}
+                  </div>
                 </div>
               </div>
             </div>

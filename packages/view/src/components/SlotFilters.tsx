@@ -1,4 +1,4 @@
-import { IconCalendar, IconMap, IconWood } from "@tabler/icons-react";
+import { IconCalendar, IconClockHour4, IconMap, IconWood } from "@tabler/icons-react";
 import { setSlotFilter, useSlotFilter } from "../state/slotFilters";
 import AddRemoveButton from "./AddRemoveButton";
 import { setWeekdayEnabled, weekdays } from "../state/filters/weekdayFilter";
@@ -8,6 +8,9 @@ import { FloorMaterialFilter } from "./FloorMaterialFilter";
 import { PlaceFilterTree } from "./PlaceFilterTree";
 import { WeekdayFilter } from "./WeekdayFilter";
 import classNames from "classnames";
+import { Stats } from "./Stats";
+import HourFilter from "./HourFilter";
+import { RangeSlider } from "@mantine/core";
 
 type Props = {
   className?: string;
@@ -43,6 +46,10 @@ export default function ({ className, style }: Props) {
         <WeekdayFilter label="Saturday" weekday={"6"} />
       </div>
       <h3 className="mb-2 flex items-center gap-x-1">
+        <IconClockHour4 size="1rem" /> Hours
+      </h3>
+      <HourFilter className={"mb-3 mt-9 mx-3"} />
+      <h3 className="mb-2 flex items-center gap-x-1">
         <IconWood size="1rem" /> Floor type
       </h3>
       <div className="mb-3 flex items-center gap-x-1">
@@ -62,7 +69,8 @@ export default function ({ className, style }: Props) {
       <h3 className="mb-2 flex items-center gap-x-1">
         <IconMap size="1rem" /> Location
       </h3>
-      <PlaceFilterTree className="mb-2" />
+      <PlaceFilterTree className="mb-4" />
+      <Stats className={""} />
     </div>
   );
 }
