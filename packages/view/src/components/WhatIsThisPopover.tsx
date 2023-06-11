@@ -35,9 +35,6 @@ export function WhatIsThisPopover({ className }: { className?: string }) {
             <img src={"/profile-pic.jpg"} alt="Profile picture of Ben Goosman" />
           </div>
         </div>
-        <p>
-          <kbd className="kbd">Esc</kbd> or click off this popover to close
-        </p>
       </HoverCard.Dropdown>
     </HoverCard>
   );
