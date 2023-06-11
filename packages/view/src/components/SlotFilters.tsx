@@ -19,6 +19,7 @@ import { Stats } from "./Stats";
 import HourFilter from "./HourFilter";
 import { RangeSlider } from "@mantine/core";
 import PriceFilter from "./PriceFilter";
+import RentalTypeFilter from "./RentalTypeFilter";
 
 type Props = {
   className?: string;
@@ -82,6 +83,11 @@ export default function ({ className, style }: Props) {
         {/* There are no rooms with concrete yet <FloorMaterialFilter label="Concrete" material={Material.Concrete} /> */}
         <FloorMaterialFilter label="Marley" material={Material.Marley} />
       </div>
+
+      <h3 className="mb-2 flex items-center gap-x-1">
+        <IconCurrencyDollar size="1rem" /> Rental type
+      </h3>
+      <RentalTypeFilter className="mb-3" />
 
       <h3 className="mb-2 flex items-center gap-x-1">
         <IconMap size="1rem" /> Location

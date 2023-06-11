@@ -1,4 +1,4 @@
-import { Badge, Button, Popover } from "@mantine/core";
+import { Badge, Popover } from "@mantine/core";
 import { DiscountedRentalRate, RentalRate } from "finder/src/types/RentalRate";
 import { Discount } from "finder/src/types/Discount";
 import { CompositeRentalType } from "finder/src/types/RentalType";
@@ -44,9 +44,11 @@ const Rate = ({ rate }: { rate: RentalRate | DiscountedRentalRate }) => {
 export function RatesPopover({
   className,
   rates,
+  rate,
 }: {
   className?: string;
   rates: RentalRate[];
+  rate: RentalRate;
 }) {
   return (
     <Popover width={200} position="bottom" withArrow shadow="md">
@@ -59,7 +61,7 @@ export function RatesPopover({
             cursor: "pointer",
           }}
         >
-          {rates && rates.length > 0 ? ` \$${rates[0]?.rate}/hr` : ``}
+          {`\$${rate.rate}/hr`}
         </Badge>
       </Popover.Target>
       <Popover.Dropdown>

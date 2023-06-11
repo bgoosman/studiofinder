@@ -6,6 +6,9 @@ import { getPlaceById } from "../state/places";
 import { RatesPopover } from "./RatesPopover";
 import { SlotActionsPopover } from "./SlotDropdown";
 import { TimeRange } from "./TimeRange";
+import { getEnabledRentalTypes } from "../state/filters/rentalTypeFilter";
+import { isValidRate, useSlotFilter } from "../state/slotFilters";
+import { priceFilter } from "../state/filters/priceFilter";
 
 export interface SlotGroupProps {
   className?: string;
@@ -18,6 +21,9 @@ function truncate(s: string, limit: number = 10) {
 }
 
 export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
+  const rentalTypeFilter = useSlotFilter("rentalType");
+  const priceFilter = useSlotFilter("price");
+
   return (
     <div className="mb-3">
       <h2 className="m-0" data-testid="datetime">
@@ -53,7 +59,19 @@ export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
                     </Breadcrumbs>
                   </div>
                   <div className="flex gap-x-1 items-center">
-                    <RatesPopover rates={rates} />
+                    {rates.map((rate) => {
+                      const enabledRentalTypes = getEnabledRentalTypes(rentalTypeFilter);
+                      console.log(rate, enabledRentalTypes, rentalTypeFilter);
+                      if (
+                        isValidRate(
+                          priceFilter,
+                          enabledRentalTypes,
+                          rentalTypeFilter
+                        )(rate)
+                      ) {
+                        return <RatesPopover rate={rate} rates={rates} />;
+                      }
+                    })}
                     <Badge variant="outline" size="sm">
                       {place.meta.floor?.type}
                     </Badge>

@@ -1,4 +1,6 @@
 import defaults from "defaults";
+import { RentalRate } from "finder/src/types/RentalRate";
+import { RentalType } from "finder/src/types/RentalType";
 import { ResolvedSlot } from "finder/src/types/Slot";
 import { DateTime } from "luxon";
 import { entity } from "simpler-state";
@@ -7,11 +9,27 @@ import { floorMaterialFilter, FloorMaterialFilter } from "./filters/floorMateria
 import { hourFilter, HourRange } from "./filters/hourFilter";
 import { placesFilter, PlacesFilter } from "./filters/placeFilter";
 import { priceFilter, PriceRange } from "./filters/priceFilter";
+import {
+  getEnabledRentalTypes,
+  rentalTypeFilter,
+  RentalTypeFilter,
+} from "./filters/rentalTypeFilter";
 import { Weekday, WeekdayFilters, weekdaysFilter } from "./filters/weekdayFilter";
 import { getPlaceById } from "./places";
 import { reaction } from "./simpler-state/reaction";
 import { slotsEntity } from "./slots";
 import { resolvedSlotsGroupedByDateEntity } from "./slotsGroupedByDate";
+
+/**
+ * How to add a new filter:
+ *
+ * 1. Create a new file in filters/ with the filter logic.
+ * 2. Add the filter to the SlotFilters type.
+ * 3. Check filter in filterSlotsWithOptions.
+ * 4. Add the filter to the defaultFilters object.
+ * 5. Add a component in the components/ folder.
+ * 6. Add the component to the SlotFilters component.
+ */
 
 export type SlotFilters = {
   weekday: WeekdayFilters;
@@ -19,8 +37,24 @@ export type SlotFilters = {
   price: PriceRange;
   place: PlacesFilter;
   floorMaterial: FloorMaterialFilter;
+  rentalType: RentalTypeFilter;
 };
+
 export type SlotFilterKey = keyof SlotFilters;
+
+export const isValidRate =
+  (
+    [minPrice, maxPrice]: PriceRange,
+    enabledRentalTypes: RentalType[],
+    rentalTypeFilter: RentalTypeFilter
+  ) =>
+  ({ rate, types }: RentalRate) =>
+    minPrice < rate &&
+    rate < maxPrice &&
+    (enabledRentalTypes.length === 0 ||
+      types?.some((compositeType) =>
+        compositeType.some((type) => rentalTypeFilter[type])
+      ));
 
 const filterSlotsWithOptions = (options: SlotFilters) => (slot: ResolvedSlot) => {
   const { weekday, hour, price, place } = options;
@@ -48,12 +82,6 @@ const filterSlotsWithOptions = (options: SlotFilters) => (slot: ResolvedSlot) =>
     return false;
   }
 
-  // Price filter
-  const [minPrice, maxPrice] = price;
-  if (!slot.rates?.some(({ rate }) => minPrice < rate && rate < maxPrice)) {
-    return false;
-  }
-
   // Place filter
   if (!place[slot.placeId]) {
     return false;
@@ -61,6 +89,15 @@ const filterSlotsWithOptions = (options: SlotFilters) => (slot: ResolvedSlot) =>
 
   // Floor material filter
   if (!options.floorMaterial[floor.type]) {
+    return false;
+  }
+
+  // Rental price and type filter
+  // If there are no enabled rental types, we don't filter by rental type
+  const enabledRentalTypes = getEnabledRentalTypes(options.rentalType);
+  const validRateFilter = isValidRate(price, enabledRentalTypes, options.rentalType);
+  const hasValidRate = slot.rates?.some(validRateFilter);
+  if (!hasValidRate) {
     return false;
   }
 
@@ -87,17 +124,18 @@ export const filteredSlots = entity<ResolvedSlot[]>([]);
 
 // Each filter API is defined in a separate file, in filters, but their state is merged here.
 const fromSessionStorage = sessionStorage.getItem("slotFilters");
-const defaultFilters = {
+const defaultFilters: SlotFilters = {
   weekday: weekdaysFilter.getDefault(),
   hour: hourFilter.getDefault(),
   place: placesFilter.getDefault(),
   price: priceFilter.getDefault(),
   floorMaterial: floorMaterialFilter.getDefault(),
+  rentalType: rentalTypeFilter.getDefault(),
 };
 const initialSlotFilters = fromSessionStorage
   ? defaults(JSON.parse(fromSessionStorage) as SlotFilters, defaultFilters)
   : defaultFilters;
-const slotFilters = entity<SlotFilters>(initialSlotFilters, [
+export const slotFilters = entity<SlotFilters>(initialSlotFilters, [
   reaction((filters: SlotFilters) => {
     filteredSlots.set(pipe(slotsEntity.get(), A.filter(filterSlotsWithOptions(filters))));
     resolvedSlotsGroupedByDateEntity.set(
