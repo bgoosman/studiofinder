@@ -67,6 +67,11 @@ export default function ({ className, style }: Props) {
       <PriceFilter className={"mb-3 mt-9 mx-3"} />
 
       <h3 className="mb-2 flex items-center gap-x-1">
+        <IconCurrencyDollar size="1rem" /> Intended use
+      </h3>
+      <RentalTypeFilter className="mb-3" />
+
+      <h3 className="mb-2 flex items-center gap-x-1">
         <IconWood size="1rem" /> Floor type
       </h3>
       <div className="mb-3 flex items-center gap-x-1">
@@ -83,11 +88,6 @@ export default function ({ className, style }: Props) {
         {/* There are no rooms with concrete yet <FloorMaterialFilter label="Concrete" material={Material.Concrete} /> */}
         <FloorMaterialFilter label="Marley" material={Material.Marley} />
       </div>
-
-      <h3 className="mb-2 flex items-center gap-x-1">
-        <IconCurrencyDollar size="1rem" /> Rental type
-      </h3>
-      <RentalTypeFilter className="mb-3" />
 
       <h3 className="mb-2 flex items-center gap-x-1">
         <IconMap size="1rem" /> Location
