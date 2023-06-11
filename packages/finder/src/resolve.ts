@@ -4,6 +4,7 @@ import { pipe } from "fp-ts/lib/function";
 import { cloneDeep, omit } from "lodash";
 import { map } from "rubico";
 import { resolveEmailStrategy } from "./resolvers/emailStrategy";
+import { Floor } from "./types/Floor";
 import { Link } from "./types/Link";
 import { Place, ResolvedPlace, ResolvedPlaceMeta } from "./types/Place";
 import { ResolvedSlot, Slot, resolvedSlotsOrderedByDate } from "./types/Slot";
@@ -39,6 +40,7 @@ export const resolvePlaceMeta = async (place: Place): Promise<ResolvedPlaceMeta>
   return {
     ...omit(cloneDeep(meta), ["links"]),
     links: meta.links ? await resolveLinks(meta.links) : [],
+    squareFootage: Floor.getSquareFootage(meta?.floor)?.[0],
   };
 };
 
@@ -63,4 +65,3 @@ export const resolvePlace = async (
     places: await map((place: Place) => resolvePlace(place, [...path]))(places),
   };
 };
-// resolvePlace(brooklynArtsExchange, []).then(console.log);

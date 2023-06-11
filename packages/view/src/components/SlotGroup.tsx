@@ -61,7 +61,6 @@ export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
                   <div className="flex gap-x-1 items-center">
                     {rates.map((rate) => {
                       const enabledRentalTypes = getEnabledRentalTypes(rentalTypeFilter);
-                      console.log(rate, enabledRentalTypes, rentalTypeFilter);
                       if (
                         isValidRate(
                           priceFilter,
@@ -69,7 +68,7 @@ export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
                           rentalTypeFilter
                         )(rate)
                       ) {
-                        return <RatesPopover rate={rate} rates={rates} />;
+                        return <RatesPopover key={rate.rate} rate={rate} rates={rates} />;
                       }
                     })}
                     <Badge variant="outline" size="sm">

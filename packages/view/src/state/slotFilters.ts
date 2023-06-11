@@ -6,6 +6,11 @@ import { DateTime } from "luxon";
 import { entity } from "simpler-state";
 import { A, flow, NEA, Ord, pipe } from "../fp/fp-exports";
 import { floorMaterialFilter, FloorMaterialFilter } from "./filters/floorMaterialFilter";
+import {
+  floorSizeFilter,
+  FloorSizeFilter,
+  getEnabledFloorSizeRanges,
+} from "./filters/floorSizeFilter";
 import { hourFilter, HourRange } from "./filters/hourFilter";
 import { placesFilter, PlacesFilter } from "./filters/placeFilter";
 import { priceFilter, PriceRange } from "./filters/priceFilter";
@@ -37,6 +42,7 @@ export type SlotFilters = {
   price: PriceRange;
   place: PlacesFilter;
   floorMaterial: FloorMaterialFilter;
+  floorSize: FloorSizeFilter;
   rentalType: RentalTypeFilter;
 };
 
@@ -60,7 +66,7 @@ const filterSlotsWithOptions = (options: SlotFilters) => (slot: ResolvedSlot) =>
   const { weekday, hour, price, place } = options;
   const start = new Date(slot.start);
   const {
-    meta: { floor },
+    meta: { floor, squareFootage },
   } = getPlaceById(slot.placeId)!;
   if (!floor) {
     throw new Error(`No floor found for place ${slot.placeId}`);
@@ -101,6 +107,17 @@ const filterSlotsWithOptions = (options: SlotFilters) => (slot: ResolvedSlot) =>
     return false;
   }
 
+  // Floor size filter
+  if (squareFootage) {
+    const enabledFloorSizeRanges = getEnabledFloorSizeRanges(options.floorSize);
+    const hasValidFloorSize = enabledFloorSizeRanges.some(
+      (range) => range[0] <= squareFootage && squareFootage <= range[1]
+    );
+    if (!hasValidFloorSize) {
+      return false;
+    }
+  }
+
   return true;
 };
 
@@ -130,6 +147,7 @@ const defaultFilters: SlotFilters = {
   place: placesFilter.getDefault(),
   price: priceFilter.getDefault(),
   floorMaterial: floorMaterialFilter.getDefault(),
+  floorSize: floorSizeFilter.getDefault(),
   rentalType: rentalTypeFilter.getDefault(),
 };
 const initialSlotFilters = fromSessionStorage

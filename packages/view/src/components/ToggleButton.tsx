@@ -1,4 +1,5 @@
 import { Button } from "@mantine/core";
+import { forwardRef } from "react";
 
 export type ToggleButtonProps = {
   ariaLabel: string;
@@ -10,32 +11,22 @@ export type ToggleButtonProps = {
   onMouseOver?: () => void;
   onMouseOut?: () => void;
   pathId?: string;
+  ref?: React.RefObject<HTMLButtonElement>;
 };
 
-export default function ({
-  ariaLabel,
-  checked,
-  className,
-  off,
-  on,
-  onClick,
-  onMouseOver,
-  onMouseOut,
-  pathId,
-}: ToggleButtonProps) {
-  return (
-    <Button
-      aria-label={ariaLabel}
-      className={className}
-      compact
-      data-pathid={pathId}
-      onClick={() => onClick(!checked)}
-      onMouseOver={onMouseOver}
-      onMouseOut={onMouseOut}
-      variant={checked ? "filled" : "outline"}
-    >
-      {!checked && off}
-      {checked && on}
-    </Button>
-  );
-}
+export default forwardRef<HTMLButtonElement, ToggleButtonProps>((props, ref) => (
+  <Button
+    aria-label={props.ariaLabel}
+    className={props.className}
+    compact
+    data-pathid={props.pathId}
+    onClick={() => props.onClick(!props.checked)}
+    onMouseOver={props.onMouseOver}
+    onMouseOut={props.onMouseOut}
+    ref={ref}
+    variant={props.checked ? "filled" : "outline"}
+  >
+    {!props.checked && props.off}
+    {props.checked && props.on}
+  </Button>
+));

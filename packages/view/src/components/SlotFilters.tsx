@@ -4,6 +4,7 @@ import {
   IconCurrency,
   IconCurrencyDollar,
   IconMap,
+  IconRuler,
   IconWood,
 } from "@tabler/icons-react";
 import { setSlotFilter, useSlotFilter } from "../state/slotFilters";
@@ -20,6 +21,13 @@ import HourFilter from "./HourFilter";
 import { RangeSlider } from "@mantine/core";
 import PriceFilter from "./PriceFilter";
 import RentalTypeFilter from "./RentalTypeFilter";
+import FloorSizeFilter from "./FloorSizeFilter";
+import {
+  FloorSize,
+  floorSizeFilter,
+  floorSizes,
+  setFloorSize,
+} from "../state/filters/floorSizeFilter";
 
 type Props = {
   className?: string;
@@ -29,6 +37,7 @@ type Props = {
 export default function ({ className, style }: Props) {
   const weekdayFilter = useSlotFilter("weekday");
   const floorMaterialFilter = useSlotFilter("floorMaterial");
+  const floorSizeFilter = useSlotFilter("floorSize");
 
   return (
     <div style={style} className={classNames(className)}>
@@ -87,6 +96,24 @@ export default function ({ className, style }: Props) {
         <FloorMaterialFilter label="Wood" material={Material.Wood} />
         {/* There are no rooms with concrete yet <FloorMaterialFilter label="Concrete" material={Material.Concrete} /> */}
         <FloorMaterialFilter label="Marley" material={Material.Marley} />
+      </div>
+
+      <h3 className="mb-2 flex items-center gap-x-1">
+        <IconRuler size="1rem" /> Floor size
+      </h3>
+      <div className="mb-3 flex items-center gap-x-1">
+        <AddRemoveButton
+          ariaLabel="Select all floor sizes"
+          checked={floorSizes.every((size) => floorSizeFilter[size])}
+          onClick={(checked) => {
+            floorSizes.forEach((size) => {
+              setSlotFilter("floorSize", setFloorSize(checked)(size));
+            });
+          }}
+        />
+        {Object.values(FloorSize).map((floorSize) => (
+          <FloorSizeFilter key={floorSize} floorSize={floorSize} />
+        ))}
       </div>
 
       <h3 className="mb-2 flex items-center gap-x-1">

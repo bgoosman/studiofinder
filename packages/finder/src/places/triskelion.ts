@@ -162,7 +162,7 @@ export const triskelion = withPlaces(
         amenities: [Amenity.Mirror],
         floor: {
           type: Material.Wood,
-          size: "19 feet, 17 feet",
+          size: "19 feet,17 feet",
         },
         maxOccupancy: 6,
         links: [

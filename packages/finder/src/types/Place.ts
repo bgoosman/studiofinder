@@ -34,6 +34,7 @@ export type Place = {
 
 export type ResolvedPlaceMeta = Omit<PlaceMeta, "links"> & {
   links: Link[];
+  squareFootage?: number;
 };
 
 export type ResolvedPlace = {

@@ -20,7 +20,7 @@ export default function ({ className }: Props) {
       className={className}
       data={data}
       onChange={(values: RentalType[]) => {
-        setSlotFilter("rentalType", setRentalTypes(true)(values));
+        setSlotFilter("rentalType", setRentalTypes(values));
       }}
       placeholder="Filter by intended use"
       value={enabledRentalTypes}

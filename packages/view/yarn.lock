@@ -3334,7 +3334,7 @@ find-up@^4.0.0, find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-"finder@file:../finder":
+"finder@file:./../finder":
   version "1.0.0"
   dependencies:
     "@types/node" "^18.11.18"

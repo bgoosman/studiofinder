@@ -17,7 +17,6 @@ export const getEnabledRentalTypes = (rentalTypeFilter: RentalTypeFilter) =>
     .map(([type, _]) => type) as RentalType[];
 
 export const setRentalTypes =
-  (enabled: boolean) =>
   (types: RentalType[]) =>
   (filters: RentalTypeFilter): RentalTypeFilter => {
     AllRentalTypes.forEach((type) => {
