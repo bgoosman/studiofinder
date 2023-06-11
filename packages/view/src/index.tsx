@@ -1,5 +1,5 @@
 export {};
 
-import(/* webpackChunkName: "AppLoader" */ "./AppLoader").then((module) => {
+import(/* webpackChunkName: "ReactLoader" */ "./ReactLoader").then((module) => {
   module.default();
 });

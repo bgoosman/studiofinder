@@ -1,31 +1,39 @@
-import { createRoot } from "react-dom/client";
-import { MantineProvider } from "@mantine/core";
+import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import App from "./App";
+import { useLocalStorage } from "@mantine/hooks";
 
-export default function createStudioFinder() {
-  const container = document.getElementById("app");
-  const root = createRoot(container!);
-  root.render(
-    <MantineProvider
-      withGlobalStyles
-      withNormalizeCSS
-      theme={{
-        globalStyles: (theme) => ({
-          h2: {
-            margin: "0",
-          },
-          h3: {
-            margin: "0",
-          },
-          h4: {
-            margin: "0",
-          },
-        }),
-      }}
-    >
-      <App />
-    </MantineProvider>
+export default function () {
+  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
+    key: "mantine-color-scheme",
+    defaultValue: "light",
+    getInitialValueInEffect: true,
+  });
+
+  const toggleColorScheme = (value?: ColorScheme) =>
+    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+
+  return (
+    <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        theme={{
+          colorScheme,
+          globalStyles: (theme) => ({
+            h2: {
+              margin: "0",
+            },
+            h3: {
+              margin: "0",
+            },
+            h4: {
+              margin: "0",
+            },
+          }),
+        }}
+      >
+        <App />
+      </MantineProvider>
+    </ColorSchemeProvider>
   );
-  const appLoader = document.getElementById("app-loader")!;
-  appLoader.remove();
 }

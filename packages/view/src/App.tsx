@@ -27,6 +27,7 @@ import SlotFilters from "./components/SlotFilters";
 
 import "./App.css";
 import { WhatIsThisPopover } from "./components/WhatIsThisPopover";
+import ThemeToggle from "./components/ThemeToggle";
 
 export default function App() {
   const [filtersOpened, { open: openFilters, close: closeFilters }] =
@@ -65,6 +66,7 @@ export default function App() {
             <IconBrandGithubFilled size="2rem" />
           </ActionIcon>
         </Anchor>
+        <ThemeToggle />
       </header>
       {!isInitializing && (
         <>
