@@ -52,7 +52,6 @@ export default function ({ className }: Props) {
       step={1}
       minRange={1}
       onChange={(range) => {
-        console.log(range);
         setTempRange(range);
       }}
       onChangeEnd={(range) => {

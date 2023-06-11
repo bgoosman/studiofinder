@@ -1,3 +1,4 @@
+import defaults from "defaults";
 import { ResolvedSlot } from "finder/src/types/Slot";
 import { DateTime } from "luxon";
 import { entity } from "simpler-state";
@@ -5,6 +6,7 @@ import { A, flow, NEA, Ord, pipe } from "../fp/fp-exports";
 import { floorMaterialFilter, FloorMaterialFilter } from "./filters/floorMaterialFilter";
 import { hourFilter, HourRange } from "./filters/hourFilter";
 import { placesFilter, PlacesFilter } from "./filters/placeFilter";
+import { priceFilter, PriceRange } from "./filters/priceFilter";
 import { Weekday, WeekdayFilters, weekdaysFilter } from "./filters/weekdayFilter";
 import { getPlaceById } from "./places";
 import { reaction } from "./simpler-state/reaction";
@@ -14,13 +16,14 @@ import { resolvedSlotsGroupedByDateEntity } from "./slotsGroupedByDate";
 export type SlotFilters = {
   weekday: WeekdayFilters;
   hour: HourRange;
+  price: PriceRange;
   place: PlacesFilter;
   floorMaterial: FloorMaterialFilter;
 };
 export type SlotFilterKey = keyof SlotFilters;
 
 const filterSlotsWithOptions = (options: SlotFilters) => (slot: ResolvedSlot) => {
-  const { weekday, hour, place } = options;
+  const { weekday, hour, price, place } = options;
   const start = new Date(slot.start);
   const {
     meta: { floor },
@@ -42,6 +45,12 @@ const filterSlotsWithOptions = (options: SlotFilters) => (slot: ResolvedSlot) =>
   // Hour range filter
   const startHour = start.getHours();
   if (startHour > hour.max || startHour < hour.min) {
+    return false;
+  }
+
+  // Price filter
+  const [minPrice, maxPrice] = price;
+  if (!slot.rates?.some(({ rate }) => minPrice < rate && rate < maxPrice)) {
     return false;
   }
 
@@ -78,14 +87,16 @@ export const filteredSlots = entity<ResolvedSlot[]>([]);
 
 // Each filter API is defined in a separate file, in filters, but their state is merged here.
 const fromSessionStorage = sessionStorage.getItem("slotFilters");
+const defaultFilters = {
+  weekday: weekdaysFilter.getDefault(),
+  hour: hourFilter.getDefault(),
+  place: placesFilter.getDefault(),
+  price: priceFilter.getDefault(),
+  floorMaterial: floorMaterialFilter.getDefault(),
+};
 const initialSlotFilters = fromSessionStorage
-  ? (JSON.parse(fromSessionStorage) as SlotFilters)
-  : {
-      weekday: weekdaysFilter.getDefault(),
-      hour: hourFilter.getDefault(),
-      place: placesFilter.getDefault(),
-      floorMaterial: floorMaterialFilter.getDefault(),
-    };
+  ? defaults(JSON.parse(fromSessionStorage) as SlotFilters, defaultFilters)
+  : defaultFilters;
 const slotFilters = entity<SlotFilters>(initialSlotFilters, [
   reaction((filters: SlotFilters) => {
     filteredSlots.set(pipe(slotsEntity.get(), A.filter(filterSlotsWithOptions(filters))));

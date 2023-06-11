@@ -2,10 +2,11 @@ import { RentalRate } from "finder/src/types/RentalRate";
 import { ResolvedSlot } from "finder/src/types/Slot";
 import { values } from "fp-ts-std/Record";
 import * as A from "fp-ts/Array";
-import { pipe, unsafeCoerce } from "fp-ts/function";
 import * as NEA from "fp-ts/NonEmptyArray";
+import { pipe, unsafeCoerce } from "fp-ts/function";
 import { entity } from "simpler-state";
 import { getUniverse, traversePlace } from "./places";
+import { derived } from "./simpler-state/derived";
 
 export type ResolvedSlots = NEA.NonEmptyArray<ResolvedSlot>;
 export const slotsEntity = entity<ResolvedSlots>(
@@ -35,3 +36,16 @@ export const slotsEntity = entity<ResolvedSlots>(
     }
   )
 );
+
+export const maxRate = derived(slotsEntity, (slots) => {
+  let max = 0;
+  slots.forEach((slot) => {
+    slot.rates?.forEach((rate) => {
+      if (rate.rate > max) {
+        max = rate.rate;
+      }
+    });
+  });
+  return max;
+});
+export const useMaxRate = maxRate.use;
