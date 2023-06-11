@@ -1,4 +1,4 @@
-import { Anchor, Popover } from "@mantine/core";
+import { ActionIcon, Anchor, Popover } from "@mantine/core";
 import { ResolvedSlot } from "finder/src/types/Slot";
 import { Link } from "finder/src/types/Link";
 import { getPlaceById } from "../state/places";
@@ -32,7 +32,9 @@ export const SlotActionsPopover = ({ slot }: SlotActionsPopoverProps) => {
   return (
     <Popover width={200} position="left" withArrow shadow="md">
       <Popover.Target>
-        <IconMenu2 size="1.25rem" />
+        <ActionIcon size="xs">
+          <IconLink size="1.25rem" />
+        </ActionIcon>
       </Popover.Target>
 
       <Popover.Dropdown>

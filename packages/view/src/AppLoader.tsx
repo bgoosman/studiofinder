@@ -6,7 +6,23 @@ export default function createStudioFinder() {
   const container = document.getElementById("app");
   const root = createRoot(container!);
   root.render(
-    <MantineProvider withGlobalStyles withNormalizeCSS>
+    <MantineProvider
+      withGlobalStyles
+      withNormalizeCSS
+      theme={{
+        globalStyles: (theme) => ({
+          h2: {
+            margin: "0",
+          },
+          h3: {
+            margin: "0",
+          },
+          h4: {
+            margin: "0",
+          },
+        }),
+      }}
+    >
       <App />
     </MantineProvider>
   );

@@ -18,13 +18,13 @@ export const TimeRange = ({
   const endMeridiem = endHour < 12 ? "a" : "p";
   return (
     <span className={classNames("flex flex-wrap content-center", className)}>
-      {"("}
+      {/* {"("} */}
       {startHour % 12 === 0 ? 12 : startHour % 12}
       {startMinute > 0 ? `:${startMinute}` : ``}
       {startMeridiem}-{endHour % 12 === 0 ? 12 : endHour % 12}
       {endMinute > 0 ? `:${endMinute}` : ``}
       {endMeridiem}
-      {")"}
+      {/* {")"} */}
     </span>
   );
 };

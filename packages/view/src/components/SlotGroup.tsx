@@ -19,8 +19,8 @@ function truncate(s: string, limit: number = 10) {
 
 export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
   return (
-    <div className="mt-3">
-      <h2 className="px-3 m-0" data-testid="datetime">
+    <div className="mb-3">
+      <h2 className="m-0" data-testid="datetime">
         {title}
       </h2>
       {slots.map((slot) => {
@@ -38,26 +38,26 @@ export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
         return (
           rates &&
           rates.length > 0 && (
-            <div key={`${placeId + start + end}`} className="flex items-center px-4">
-              <div className="flex-grow p-4 pl-0 md:min-w-[128px] md:p-2 md:w-auto grid grid-cols-1 gap-x-3 gap-y-2">
-                <div className="flex items-center gap-x-3">
-                  <Breadcrumbs separator=">">
-                    {parent.meta.shortName ? (
-                      <span>{parent.meta.shortName}</span>
-                    ) : parent.name != place.name ? (
-                      <span>{parent.name}</span>
-                    ) : null}
-                    <span>{truncate(place.name, 20)}</span>
-                  </Breadcrumbs>
-                  <TimeRange start={slot.start} end={slot.end} />
+            <div key={`${placeId + start + end}`} className="flex items-center">
+              <div className="flex-grow py-2 pl-0 gap-x-3 gap-y-2">
+                <div className="flex-col gap-x-3 gap-y-3 inline-flex">
+                  <div className="flex gap-x-1">
+                    <Breadcrumbs separator=">">
+                      {parent.meta.shortName ? (
+                        <span>{parent.meta.shortName}</span>
+                      ) : parent.name != place.name ? (
+                        <span>{parent.name}</span>
+                      ) : null}
+                      <span>{truncate(place.name, 20)}</span>
+                      <TimeRange start={slot.start} end={slot.end} />
+                    </Breadcrumbs>
+                  </div>
+                  <div className="flex gap-x-1">
+                    <RatesPopover rates={rates} />
+                    <Badge variant="outline">{place.meta.floor?.type}</Badge>
+                    {links.length > 0 && <SlotActionsPopover slot={slot} />}
+                  </div>
                 </div>
-                <div className="flex items-center gap-x-1">
-                  <RatesPopover rates={rates} />
-                  <Badge variant="outline">{place.meta.floor?.type}</Badge>
-                </div>
-              </div>
-              <div className="flex-shrink p-0 md:p-2 text-left md:text-left">
-                {links.length > 0 && <SlotActionsPopover slot={slot} />}
               </div>
             </div>
           )
