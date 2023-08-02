@@ -15,7 +15,7 @@ export type GoogleCalendarEvent = {
   };
 };
 
-export const KEY = `AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs`;
+export const KEY = process.env.GOOGLE_KEY;
 
 export const fetchGoogleCalendar =
   (options: FetchGoogleCalendarOptions) => async (): Promise<GoogleCalendarEvent[]> => {
