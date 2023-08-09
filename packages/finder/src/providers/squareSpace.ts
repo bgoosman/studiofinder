@@ -4,6 +4,7 @@ import { Slot } from "../types/Slot";
 export type SquareSpaceOptions = {
   USER_ID: string;
   API_KEY: string;
+  months: number;
 };
 
 export type AvailableDate = {
@@ -49,9 +50,10 @@ async function fetchAvailableTimes(date: string, options: SquareSpaceOptions) {
 export const fetchSlotsFromSquareSpace = async (
   options: SquareSpaceOptions
 ): Promise<Slot[]> => {
+  const { months = 3 } = options;
   let slots: Slot[] = [];
   let fetchDate = DateTime.now();
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < months; i++) {
     const dates = await fetchAvailableDates(fetchDate.year, fetchDate.month, options);
     for (const date of dates) {
       const times = await fetchAvailableTimes(date, options);

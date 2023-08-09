@@ -24,6 +24,7 @@ const getSlots = () =>
   fetchSlotsFromSquareSpace({
     USER_ID,
     API_KEY,
+    months: 5,
   });
 
 const getPlaceMeta = (): PlaceMeta => ({
