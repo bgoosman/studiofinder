@@ -9,6 +9,9 @@ if (!DEBUG) {
 }
 
 resolvePlace(universe, []).then((json: ResolvedPlace) => {
+  if (!json) {
+    throw new Error("Failed to resolve universe");
+  }
   json.createdAt = new Date().toISOString();
   console.log(jsonMinify(JSON.stringify(json, null, 2)));
 });

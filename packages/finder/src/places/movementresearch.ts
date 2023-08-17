@@ -184,14 +184,19 @@ const optionsToSlots = async (options: UrlOptions) => {
 };
 
 const getSlots = async (options: Array<UrlOptions>) => {
-  const slots = (await Promise.all(options.map(optionsToSlots))) as Slot[][];
-  const sorted = slots.flat().sort(slotsOrderedByDate.compare);
-  const merged = mergeOverlappingSlots(sorted);
-  const inverted = invertSlots({
-    range,
-    hours,
-  })(merged);
-  return inverted;
+  try {
+    const slots = (await Promise.all(options.map(optionsToSlots))) as Slot[][];
+    const sorted = slots.flat().sort(slotsOrderedByDate.compare);
+    const merged = mergeOverlappingSlots(sorted);
+    const inverted = invertSlots({
+      range,
+      hours,
+    })(merged);
+    return inverted;
+  } catch (error) {
+    console.error(`Failed to get slots for Movement Research`);
+    return [];
+  }
 };
 
 // getSlots(schema["Courtyard"].slots).then((slots) => {

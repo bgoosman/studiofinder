@@ -51,17 +51,26 @@ export const resolvePlace = async (
   const { name, places } = place;
   path.push(name);
   const id = path.join(">");
-  const slots = await place.slots();
+  const slotsPre = await place.slots();
+  let slots: ResolvedSlot[] = [];
+  try {
+    slots = await pipe(
+      await map(resolveSlot(id, place))(slotsPre),
+      A.filter((slot: ResolvedSlot) => new Date(slot.start) > new Date()),
+      A.sort(resolvedSlotsOrderedByDate)
+    );
+  } catch (error) {
+    console.error(`Failed to resolve ${path}`);
+  }
+  const meta = await resolvePlaceMeta(place);
   return {
     id,
     name,
     path,
-    slots: await pipe(
-      await map(resolveSlot(id, place))(slots),
-      A.filter((slot: ResolvedSlot) => new Date(slot.start) > new Date()),
-      A.sort(resolvedSlotsOrderedByDate)
+    slots,
+    meta,
+    places: (await map((place: Place) => resolvePlace(place, [...path]))(places)).filter(
+      Boolean
     ),
-    meta: await resolvePlaceMeta(place),
-    places: await map((place: Place) => resolvePlace(place, [...path]))(places),
   };
 };
