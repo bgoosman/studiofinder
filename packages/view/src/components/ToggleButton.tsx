@@ -18,7 +18,6 @@ export default forwardRef<HTMLButtonElement, ToggleButtonProps>((props, ref) => 
   <Button
     aria-label={props.ariaLabel}
     className={props.className}
-    compact
     data-pathid={props.pathId}
     onClick={() => props.onClick(!props.checked)}
     onMouseOver={props.onMouseOver}

@@ -47,15 +47,6 @@ export default function ({ className, style }: Props) {
         <IconCalendar size="1rem" /> Weekday
       </h3>
       <div className="space-x-1 mb-3 flex items-center">
-        <AddRemoveButton
-          ariaLabel="Select all weekdays"
-          checked={weekdays.every((weekday) => weekdayFilter[weekday])}
-          onClick={(checked) => {
-            weekdays.forEach((weekday) => {
-              setSlotFilter("weekday", setWeekdayEnabled(checked)(weekday));
-            });
-          }}
-        />
         <WeekdayFilter label="Sunday" weekday={"0"} />
         <WeekdayFilter label="Monday" weekday={"1"} />
         <WeekdayFilter label="Tuesday" weekday={"2"} />
