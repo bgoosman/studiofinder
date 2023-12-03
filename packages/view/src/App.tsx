@@ -28,6 +28,7 @@ import SlotFilters from "./components/SlotFilters";
 import "./App.css";
 import { WhatIsThisPopover } from "./components/WhatIsThisPopover";
 import ThemeToggle from "./components/ThemeToggle";
+import { Stats } from "./components/Stats";
 
 export default function App() {
   const [filtersOpened, { open: openFilters, close: closeFilters }] =
@@ -76,6 +77,7 @@ export default function App() {
               {DateTime.fromISO(createdAt).toLocaleString(DateTime.DATETIME_SHORT)}
             </Alert>
           )}
+          <Stats />
           <div className="md:flex md:flex-row">
             <SlotFilters className="md:w-[350px] p-4" />
             <InfiniteSlotGroups className="p-4" />
