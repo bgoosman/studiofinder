@@ -26,6 +26,7 @@ import { PlaceFilterTree } from "./PlaceFilterTree";
 import PriceFilter from "./PriceFilter";
 import RentalTypeFilter from "./RentalTypeFilter";
 import { WeekdayFilter } from "./WeekdayFilter";
+import { HourBlockFilter } from "./HourBlockFilter";
 
 type Props = {
   className?: string;
@@ -40,7 +41,7 @@ export default function ({ className, style }: Props) {
   return (
     <div style={style} className={classNames(className)}>
       <h3 className="my-2 flex items-center gap-x-1">
-        <IconCalendar size="1rem" /> Weekday
+        <IconCalendar size="1rem" /> Day
       </h3>
       <div className="space-x-1 mb-3 flex items-center">
         <WeekdayFilter label="Sunday" weekday={"0"} />
@@ -50,6 +51,14 @@ export default function ({ className, style }: Props) {
         <WeekdayFilter label="Thursday" weekday={"4"} />
         <WeekdayFilter label="Friday" weekday={"5"} />
         <WeekdayFilter label="Saturday" weekday={"6"} />
+      </div>
+      <h3 className="mb-2 flex items-center gap-x-1">
+        <IconClockHour4 size="1rem" /> Time
+      </h3>
+      <div className="space-x-1 mb-3 flex items-center">
+        <HourBlockFilter label="Morning" hourBlock="morning" />
+        <HourBlockFilter label="Afternoon" hourBlock="afternoon" />
+        <HourBlockFilter label="Evening" hourBlock="evening" />
       </div>
 
       <h3 className="mb-2 flex items-center gap-x-1">

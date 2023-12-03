@@ -24,6 +24,7 @@ import { getPlaceById } from "./places";
 import { reaction } from "./simpler-state/reaction";
 import { slotsEntity } from "./slots";
 import { resolvedSlotsGroupedByDateEntity } from "./slotsGroupedByDate";
+import { HourBlockFilter, hourBlocksFilter } from "./filters/hourBlockFilter";
 
 /**
  * How to add a new filter:
@@ -39,6 +40,7 @@ import { resolvedSlotsGroupedByDateEntity } from "./slotsGroupedByDate";
 export type SlotFilters = {
   weekday: WeekdayFilters;
   hour: HourRange;
+  hourBlock: HourBlockFilter
   price: PriceRange;
   place: PlacesFilter;
   floorMaterial: FloorMaterialFilter;
@@ -85,6 +87,17 @@ const filterSlotsWithOptions = (options: SlotFilters) => (slot: ResolvedSlot) =>
   // Hour range filter
   const startHour = start.getHours();
   if (startHour > hour.max || startHour < hour.min) {
+    return false;
+  }
+
+  // Hour block filter
+  if (startHour < 12 && !options.hourBlock.morning) {
+    return false;
+  }
+  if (startHour >= 12 && startHour < 18 && !options.hourBlock.afternoon) {
+    return false;
+  }
+  if (startHour >= 18 && !options.hourBlock.evening) {
     return false;
   }
 
@@ -157,6 +170,7 @@ export const filteredSlots = entity<ResolvedSlot[]>([]);
 const fromSessionStorage = sessionStorage.getItem("slotFilters");
 const defaultFilters: SlotFilters = {
   weekday: weekdaysFilter.getDefault(),
+  hourBlock: hourBlocksFilter.getDefault(),
   hour: hourFilter.getDefault(),
   place: placesFilter.getDefault(),
   price: priceFilter.getDefault(),
