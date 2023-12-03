@@ -54,13 +54,13 @@ export const isValidRate =
     enabledRentalTypes: RentalType[],
     rentalTypeFilter: RentalTypeFilter
   ) =>
-  ({ rate, types }: RentalRate) =>
-    minPrice < rate &&
-    rate < maxPrice &&
-    (enabledRentalTypes.length === 0 ||
-      types?.some((compositeType) =>
-        compositeType.some((type) => rentalTypeFilter[type])
-      ));
+    ({ rate, types }: RentalRate) =>
+      minPrice < rate &&
+      rate < maxPrice &&
+      (enabledRentalTypes.length === 0 ||
+        types?.some((compositeType) =>
+          compositeType.some((type) => rentalTypeFilter[type])
+        ));
 
 const filterSlotsWithOptions = (options: SlotFilters) => (slot: ResolvedSlot) => {
   const { weekday, hour, price, place } = options;
@@ -89,8 +89,22 @@ const filterSlotsWithOptions = (options: SlotFilters) => (slot: ResolvedSlot) =>
   }
 
   // Place filter
+  // Universe is always selected
+  const anyPlacesSelected = Object.entries(place).some(
+    ([locationId, selected]) => locationId != "Universe" && selected
+  );
+  const path = slot.placeId.split(">");
+  const getParentPlace = (placeId: string) => placeId.split(">").slice(0, -1).join(">");
+  const anySiblingPlaceSelected = (path: string) => Object.entries(place).some(
+    ([locationId, selected]) => getParentPlace(locationId) == getParentPlace(path) && selected
+  );
   if (!place[slot.placeId]) {
-    return false;
+    for (let i = path.length - 1; i >= 0; i--) {
+      const locationId = path.slice(0, i + 1).join(">");
+      if (!place[locationId] && anySiblingPlaceSelected(locationId)) {
+        return false;
+      }
+    }
   }
 
   // Floor material filter
