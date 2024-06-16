@@ -5,7 +5,7 @@
   "scripts": {
     "build": "rm -rf dist-resolver && yarn run tsc",
     "watch": "yarn run tsc --watch",
-    "start": "node dist-resolver/index.js",
+    "start": "yarn run ts-node --files src/index.ts",
     "resolve": "mkdir -p dist && yarn -s start > dist/universe.json"
   },
   "dependencies": {
