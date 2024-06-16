@@ -51,6 +51,7 @@ export const resolvePlace = async (
   const { name, places } = place;
   path.push(name);
   const id = path.join(">");
+  // console.log(`Resolving ${id}`);
   const slotsPre = await place.slots();
   let slots: ResolvedSlot[] = [];
   try {

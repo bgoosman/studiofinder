@@ -33,7 +33,7 @@ const getSlots = pipe([
   }),
 ]);
 
-// getSlots().then((slots) => console.log(slots));//?
+// getSlots().then((slots: any) => console.log(slots)); //?
 
 export const chezbushwick = withPlaces("Chez Bushwick", {}, [
   withSlots(

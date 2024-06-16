@@ -18,5 +18,9 @@ export const universe = withPlaces("Universe", {}, [
     motive,
   ]),
   withPlaces("Queens", {}, [thewoods]),
-  withPlaces("Manhattan", {}, [gibney280, gibney890, cc122]),
+  withPlaces("Manhattan", {}, [
+    gibney280,
+    gibney890,
+    // cc122
+  ]),
 ]);

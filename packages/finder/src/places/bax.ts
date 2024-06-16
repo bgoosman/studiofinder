@@ -17,7 +17,7 @@ import {
   formatDate,
   monthsFrom,
   now,
-  parseDate
+  parseDate,
 } from "../datetime/datetime-fns";
 import { invertSlots } from "../slots/invertSlots";
 import { mergeOverlappingSlots } from "../slots/mergeOverlappingSlots";
@@ -122,7 +122,7 @@ const getSlots = (room: string) => async () => {
   return inverted;
 };
 
-// getSlots("Studio C")().then((slots) => slots);
+// getSlots("Studio C")().then((slots) => console.log(slots));
 
 const bookingStrategy = {
   type: "email",
