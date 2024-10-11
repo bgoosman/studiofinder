@@ -1,3 +1,4 @@
+import logToFile from "../logging/logToFile";
 import { Slot } from "../types/Slot";
 
 export type FetchGoogleCalendarOptions = {
@@ -29,7 +30,12 @@ export const fetchGoogleCalendar =
     const url = `https://clients6.google.com/calendar/v3/calendars/${calendarId}%40group.calendar.google.com/events?calendarId=${calendarId}%40group.calendar.google.com&singleEvents=true&timeZone=America%2FNew_York&maxAttendees=1&maxResults=250&sanitizeHtml=true&timeMin=${from}&timeMax=${to}&key=${
       key || KEY
     }`;
-    // console.debug("Fetching availability from", from, "to", to, "from", calendarId);
+    logToFile(
+      JSON.stringify({
+        message: "Fetching availability from",
+        url,
+      })
+    );
     const response = await fetch(url);
     const json = await response.json();
     return json.items as GoogleCalendarEvent[];

@@ -12,6 +12,7 @@ import { Photo } from "../types/Photo";
 import { withPlaces, withSlots } from "../types/Place";
 import { RateValidIf } from "../types/RateValidIf";
 import { RentalType } from "../types/RentalType";
+import logToFile from "../logging/logToFile";
 
 const range = dateRange(now(), daysFrom(60));
 const hours = numberRange(8, 23);

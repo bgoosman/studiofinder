@@ -13,14 +13,17 @@ export const universe = withPlaces("Universe", {}, [
   withPlaces("Brooklyn", {}, [
     triskelion,
     chezbushwick,
-    brooklynArtsExchange,
+    // brooklynArtsExchange,
     centerForPerformanceResearch,
-    motive,
+
+    // Commenting out Motive for now, because their API subscription expired.
+    // "API access is only available on Powerhouse plans, upgrade at https://secure.acuityscheduling.com/preferences.php?action=myaccount"
+    // motive,
   ]),
-  withPlaces("Queens", {}, [thewoods]),
-  withPlaces("Manhattan", {}, [
-    gibney280,
-    gibney890,
-    // cc122
-  ]),
+  // withPlaces("Queens", {}, [thewoods]),
+  // withPlaces("Manhattan", {}, [
+  //   gibney280,
+  //   gibney890,
+  //   // cc122
+  // ]),
 ]);

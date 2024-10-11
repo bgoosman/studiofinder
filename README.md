@@ -1,5 +1,11 @@
 # How to update studiofinder.fun
 
+To enable debug logging, set LOG_FILE=~/studiofinder.log (or whatever file you want)
+
+If MOtiVE is enabled, set MOTIVE_API_KEY and MOTIVE_USER_ID.
+
+For Google Calendars, set GOOGLE_KEY.
+
 ```
 cd ~/studiofinder/packages/gibney
 yarn start

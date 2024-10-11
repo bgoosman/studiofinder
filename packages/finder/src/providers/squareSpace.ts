@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import { Slot } from "../types/Slot";
+import logToFile from "../logging/logToFile";
 
 export type SquareSpaceOptions = {
   USER_ID: string;
