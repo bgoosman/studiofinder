@@ -29,6 +29,11 @@ export const infiniteSlotGroups = derivedAny(
   }
 );
 
+export const slotGroupsForXDays = (days: number) => derivedAny(
+  [slotGroupsByDate],
+  ([slotGroupsByDate]) => slotGroupsByDate.slice(0, days) as [string, ResolvedSlot[]][]
+);
+
 export const hasNextPage = derivedAny(
   [page, totalPageCount],
   ([page, totalPageCount]) => page < totalPageCount - 1

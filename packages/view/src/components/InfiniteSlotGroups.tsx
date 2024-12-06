@@ -33,6 +33,8 @@ export default function ({ className }: Props) {
     return () => window.removeEventListener("scroll", onScroll);
   }, [_infiniteSlotGroups]);
 
+  console.log(_infiniteSlotGroups); 
+
   return (
     <div className={className}>
       {_infiniteSlotGroups.length > 0 &&

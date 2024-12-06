@@ -1,22 +1,27 @@
-import { Box, Button, Collapse, Group } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Center,
+  Collapse,
+  Group,
+  rem,
+  SegmentedControl,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconCalendar,
   IconChevronRight,
   IconClockHour4,
   IconCurrencyDollar,
+  IconList,
   IconMap,
   IconRuler,
-  IconWood
+  IconWood,
 } from "@tabler/icons-react";
 import classNames from "classnames";
 import { Material, materials } from "finder/src/types/Floor";
 import { setFloorMaterialEnabled } from "../state/filters/floorMaterialFilter";
-import {
-  FloorSize,
-  floorSizes,
-  setFloorSize
-} from "../state/filters/floorSizeFilter";
+import { FloorSize, floorSizes, setFloorSize } from "../state/filters/floorSizeFilter";
 import { setSlotFilter, useSlotFilter } from "../state/slotFilters";
 import AddRemoveButton from "./AddRemoveButton";
 import { FloorMaterialFilter } from "./FloorMaterialFilter";
@@ -27,6 +32,7 @@ import PriceFilter from "./PriceFilter";
 import RentalTypeFilter from "./RentalTypeFilter";
 import { WeekdayFilter } from "./WeekdayFilter";
 import { HourBlockFilter } from "./HourBlockFilter";
+import { setCurrentView, useCurrentView } from "src/state/view";
 
 type Props = {
   className?: string;
@@ -34,12 +40,38 @@ type Props = {
 };
 
 export default function ({ className, style }: Props) {
+  const view = useCurrentView();
   const floorMaterialFilter = useSlotFilter("floorMaterial");
   const floorSizeFilter = useSlotFilter("floorSize");
   const [opened, { toggle }] = useDisclosure(false);
 
   return (
     <div style={style} className={classNames(className)}>
+      <h3 className="mb-2 flex items-center gap-x-1">View</h3>
+      <SegmentedControl
+        value={view}
+        onChange={setCurrentView}
+        data={[
+          {
+            value: "calendar",
+            label: (
+              <Center style={{ gap: 10 }}>
+                <IconCalendar style={{ width: rem(16), height: rem(16) }} />
+                <span>Calendar</span>
+              </Center>
+            ),
+          },
+          {
+            value: "list",
+            label: (
+              <Center style={{ gap: 10 }}>
+                <IconList style={{ width: rem(16), height: rem(16) }} />
+                <span>List</span>
+              </Center>
+            ),
+          },
+        ]}
+      />
       <h3 className="my-2 flex items-center gap-x-1">
         <IconCalendar size="1rem" /> Day
       </h3>
@@ -68,10 +100,15 @@ export default function ({ className, style }: Props) {
 
       <Box>
         <Group mb={5}>
-          <Button onClick={toggle} variant="subtle" leftIcon={<IconChevronRight size="1rem" />}>More filters...</Button>
+          <Button
+            onClick={toggle}
+            variant="subtle"
+            leftIcon={<IconChevronRight size="1rem" />}
+          >
+            More filters...
+          </Button>
         </Group>
         <Collapse in={opened}>
-
           <h3 className="mb-2 flex items-center gap-x-1">
             <IconClockHour4 size="1rem" /> Hours
           </h3>
@@ -96,7 +133,10 @@ export default function ({ className, style }: Props) {
               checked={materials.every((material) => floorMaterialFilter[material])}
               onClick={(checked) => {
                 materials.forEach((material) => {
-                  setSlotFilter("floorMaterial", setFloorMaterialEnabled(checked)(material));
+                  setSlotFilter(
+                    "floorMaterial",
+                    setFloorMaterialEnabled(checked)(material)
+                  );
                 });
               }}
             />
