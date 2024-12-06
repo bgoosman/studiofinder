@@ -14,7 +14,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 const MyCalendar: FC<{ events: Event[] }> = ({ events }) => {
   return (
-    <DnDCalendar
+    <Calendar
       defaultView='month'
       events={events}
       localizer={localizer}
@@ -41,7 +41,5 @@ const localizer = dateFnsLocalizer({
   getDay,
   locales,
 })
-//@ts-ignore
-const DnDCalendar = withDragAndDrop(Calendar)
 
 export default MyCalendar
