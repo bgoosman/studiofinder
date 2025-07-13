@@ -16,7 +16,7 @@ export default function ({ className, days = 90 }: Props) {
         return {
           start: new Date(slot.start),
           end: new Date(slot.end),
-          title: path[path.length - 1],
+          title: path.slice(-2).join(" > "),
         };
       })
     );
