@@ -1,14 +1,14 @@
-import { Badge, Breadcrumbs } from "@mantine/core";
-import classNames from "classnames";
-import { memo } from "react";
+import { ActionIcon, Badge, Breadcrumbs } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { IconCheck, IconCopy } from "@tabler/icons-react";
 import { ResolvedSlot } from "finder/src/types/Slot";
+import { memo } from "react";
+import { getEnabledRentalTypes } from "../state/filters/rentalTypeFilter";
 import { getPlaceById } from "../state/places";
+import { isValidRate, useSlotFilter } from "../state/slotFilters";
 import { RatesPopover } from "./RatesPopover";
 import { SlotActionsPopover } from "./SlotDropdown";
 import { TimeRange } from "./TimeRange";
-import { getEnabledRentalTypes } from "../state/filters/rentalTypeFilter";
-import { isValidRate, useSlotFilter } from "../state/slotFilters";
-import { priceFilter } from "../state/filters/priceFilter";
 
 export interface SlotGroupProps {
   className?: string;
@@ -23,6 +23,25 @@ function truncate(s: string, limit: number = 10) {
 export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
   const rentalTypeFilter = useSlotFilter("rentalType");
   const priceFilter = useSlotFilter("price");
+
+  const onCopySlot = (slot: ResolvedSlot) => {
+    const place = getPlaceById(slot.placeId)!;
+    const parent = getPlaceById(place.path.slice(0, -1).join(">"))!;
+    
+    const slotInfo = `${parent.name} > ${place.name} - ${new Date(slot.start).toLocaleString()} to ${new Date(slot.end).toLocaleString()}`;
+    
+    navigator.clipboard.writeText(slotInfo).catch((err) => {
+      console.error('Failed to copy slot info:', err);
+    });
+    
+    notifications.show({
+      title: "Slot copied",
+      message: "Slot information has been copied to clipboard",
+      color: "teal",
+      icon: <IconCheck size="1.25rem" />,
+      autoClose: 2000,
+    });
+  };
 
   return (
     <div className="mb-3">
@@ -75,6 +94,13 @@ export const SlotGroup = memo(({ className, slots, title }: SlotGroupProps) => {
                       {place.meta.floor?.type}
                     </Badge>
                     {links.length > 0 && <SlotActionsPopover slot={slot} />}
+                    <ActionIcon 
+                      size="xs" 
+                      onClick={() => onCopySlot(slot)}
+                      title="Copy slot information"
+                    >
+                      <IconCopy size="1.25rem" />
+                    </ActionIcon>
                   </div>
                 </div>
               </div>

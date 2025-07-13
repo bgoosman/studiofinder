@@ -1,4 +1,5 @@
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import App from "./App";
 import { useLocalStorage } from "@mantine/hooks";
 
@@ -32,6 +33,7 @@ export default function () {
           }),
         }}
       >
+        <Notifications />
         <App />
       </MantineProvider>
     </ColorSchemeProvider>
