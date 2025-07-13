@@ -1,0 +1,65 @@
+name: Update Universe Data
+
+on:
+  schedule:
+    # Run every 6 hours
+    - cron: "0 */6 * * *"
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  update-universe:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node.js and Yarn
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: |
+          cd packages/finder
+          yarn install --frozen-lockfile
+
+      - name: Set timezone to New York
+        run: |
+          sudo timedatectl set-timezone America/New_York
+          echo "Timezone set to $(date)"
+
+      - name: Generate universe.json
+        env:
+          GOOGLE_KEY: ${{ secrets.GOOGLE_KEY }}
+        run: |
+          cd packages/finder
+          yarn resolve
+
+      - name: Process universe.json
+        run: |
+          cd packages/finder
+          # Remove the first line as in the original script
+          sed -i '1d' dist/universe.json
+          # Copy to the view/slots directory
+          cp dist/universe.json ../view/slots/
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Commit and push changes
+        run: |
+          git add packages/view/slots/universe.json
+          # Only commit if there are changes
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "automated scrape on $(date '+%Y-%m-%d %H:%M:%S')"
+            git push origin main
+          fi
